@@ -1,0 +1,92 @@
+{
+  "INVOICE_TYPES": ["FV", "FT", "FA", "EV", "ET", "EA"],
+  "TAX_GROUPS": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N"
+  ],
+  "CLIENT_TYPES": ["PP", "PM", "PC", "PL", "AO"],
+  "ITEM_TYPES": ["BIE", "SER", "TAX"],
+  "AVOIR_NATURE": ["COR", "RAN", "RAM", "RRR"],
+  "ITEM_ALLOWED_GROUPS": {
+    "BIE": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M"],
+    "SER": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M"],
+    "TAX": ["L", "N"]
+  },
+  "CLIENT_REQUIRED_FIELDS": {
+    "PP": [],
+    "PM": ["denomination", "nif"],
+    "PC": ["name", "nif"],
+    "PL": ["name", "nif"],
+    "AO": ["name", "refExo"]
+  },
+  "INVOICE_HAVE_ORIGIN_REQUIRED": {
+    "COR": true,
+    "RAN": true,
+    "RAM": true,
+    "RRR": false
+  },
+
+  "clients": {
+    "types": ["PP", "PM", "PC", "PL", "AO"],
+    "ao_requires_refExo": true
+  },
+  "items": {
+    "types": ["BIE", "SER", "TAX"],
+    "tax_only_groups": ["L", "N"]
+  },
+  "invoices": {
+    "types": ["FV", "FT", "FA", "EV", "ET", "EA"],
+    "modePrix": ["HT", "TTC"],
+    "fa_reference_required": true,
+    "fa_rrr_reference_literal": "RRR"
+  },
+  "emcf": {
+    "auth": "Bearer JWT",
+    "endpoints": {
+      "status": "/api/info/status",
+      "invoice_post": "/api/invoice",
+      "invoice_confirm": "/api/invoice/{uid}/CONFIRM",
+      "invoice_cancel": "/api/invoice/{uid}/CANCEL"
+    },
+    "pending_max": 10,
+    "pending_expiry_seconds": 120,
+    "verify_totals_before_confirm": true,
+    "response_security": ["dateTime", "qrCode", "codeDEFDGI", "counters", "nim"]
+  },
+  "mcf": {
+    "serial": {
+      "baud": 115200,
+      "dataBits": 8,
+      "parity": "none",
+      "stopBits": 1
+    },
+    "commands": ["C1h", "C3h", "C0h", "31h", "33h", "35h", "38h"],
+    "qr_format": "RDCDEF01;{MID};{SIG};{NIF};{DT}",
+    "verify_totals_before_finalize": true
+  },
+  "currency": {
+    "base": "CDF",
+    "defaultAlt": "USD",
+    "alt_locked": ["USD"],
+    "equivalent_on_confirm": true,
+    "fx_latest_required": true
+  },
+  "loyalty": {
+    "enabled_by_settings": true,
+    "earn": { "base": "TTC", "exclude_groups": ["L", "N"] },
+    "redeem_idempotent": true
+  },
+  "multiTenant": { "tenantId_required": true, "header": "X-Tenant-Id" }
+}

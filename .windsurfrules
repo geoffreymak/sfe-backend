@@ -1,0 +1,131 @@
+version: 1
+project:
+  name: sfe-backend
+  description: >
+    SFE conforme DGI (NestJS + MongoDB) avec e-MCF/MCF, multi-tenant,
+    devises, stock avancé, fidélisation, audit, Swagger.
+  language: typescript
+  runtime: nodejs@20
+  package_manager: yarn
+
+pinned_context:
+  - path: /docs/PROJECT_SPEC.md
+  - path: /docs/DGI_RULES.md
+  - path: /docs/API_CONTRACT.md
+
+security:
+  auth:
+    jwt_access: true
+  password_hash: argon2id
+  cors: { mode: allowlist }
+  helmet: true
+  rate_limit: { enabled: true, default_ttl_seconds: 60, default_limit: 120 }
+  secrets_policy: { never_commit_real_secrets: true, .env_in_gitignore: true }
+  pii_logging_mask: [email, phone, nif, refExo]
+
+observability:
+  logger:
+    { library: pino, json: true, request_id: true, inject_user_tenant: true }
+  health: { library: "@nestjs/terminus", checks: [mongo, redis] }
+
+generation_defaults:
+  nest_structure: true
+  modules_expected:
+    - core/{database,cache,logger,tenant}
+    - auth
+    - tenants
+    - settings
+    - currencies
+    - fx
+    - clients
+    - loyalty
+    - items
+    - stock
+    - invoices
+    - integrations/{emcf,mcf,orchestrator}
+    - reports
+    - pdf
+    - audit
+    - health
+  database: mongoose
+  money_decimal: { storage: Decimal128, dto_type: string }
+
+dgi_rules:
+  source_artifacts:
+    - from: /src/common/dgi/dgi-constants.ts
+      to: /src/common/dgi/dgi-constants.ts
+    - from: /src/common/dgi/dgi-rules.json
+      to: /src/common/dgi/dgi-rules.json
+  minimal_guards:
+    - name: AO_requires_refExo
+    - name: FA_requires_reference_or_RRR
+    - name: TAX_only_L_or_N
+
+quality_gates:
+  - name: bootstrap_ok
+    require: [swagger_available, health_ok]
+  - name: multi_tenant_ok
+    require: [header_X_Tenant_Id, isolation_tests]
+  - name: currencies_fx_ok
+    require: [routes:/currencies, /fx-rates]
+  - name: clients_loyalty_ok
+    require: [routes:/clients, /loyalty/*]
+  - name: items_ok
+    require: [routes:/items, validations:TAX_only_L_or_N]
+  - name: stock_ok
+    require: [routes:/stock/*, warehouses_created]
+  - name: invoices_ok
+    require: [routes:/invoices/*, totals_consistency]
+  - name: integrations_ok
+    require: [routes:/invoices/:id/normalize, /integrations/status]
+  - name: dgi_min_rules_ok
+    require: [AO_requires_refExo, FA_requires_reference_or_RRR, TAX_only_L_or_N]
+
+commands:
+  install: ["yarn"]
+  build: ["yarn", "build"]
+  start: ["yarn", "start:dev"]
+  test: ["yarn", "test"]
+  test_e2e: ["yarn", "test:e2e"]
+  lint_fix: ["yarn", "lint"]
+  docker_up: ["docker-compose", "up", "-d"]
+
+phases:
+  - id: P0_docs_constants
+    description: "Installer/mettre à jour docs & constants DGI"
+    tasks: [sync_docs_constants]
+    run: [build]
+  - id: P1_multi_tenant
+    description: "Guard Tenant + memberships + filtres"
+    tasks: [tenant_guard, memberships, plugin_mongoose_filter]
+    run: [build, test]
+  - id: P2_settings_currencies_fx
+    tasks: [settings_module, currencies_module, fx_module]
+    run: [build, test]
+  - id: P3_clients_loyalty
+    tasks: [clients_extend_types_loyalty, loyalty_endpoints]
+    run: [build, test]
+  - id: P4_items_rules
+    tasks: [items_crud, enforce_tax_LN]
+    run: [build, test]
+  - id: P5_stock
+    tasks: [warehouses, receipts_transfers_adjustments, stock_alerts]
+    run: [build, test]
+  - id: P6_invoices_core
+    tasks: [draft_confirm, totals_ht_vat_ttc, idempotency]
+    run: [build, test]
+  - id: P7_integrations
+    tasks:
+      [
+        emcf_gateway_http,
+        mcf_serial_gateway,
+        orchestrator_normalize,
+        integrations_status,
+      ]
+    run: [build, test:e2e]
+  - id: P8_reports_pdf
+    tasks: [mcf_journal, sales_summary, pdf_export]
+    run: [build]
+
+after_success_message: |
+  ✅ Phase validée. Passe à la suivante.
