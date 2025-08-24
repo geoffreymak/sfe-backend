@@ -29,7 +29,7 @@ export class SettingsController {
   }
 
   @Put()
-  @Roles('admin-org')
+  @Roles('OWNER', 'ADMIN')
   async put(@Body() dto: UpdateSettingsDto): Promise<unknown> {
     const tenantId = getTenantId();
     if (!tenantId) throw new BadRequestException('Missing tenant context');

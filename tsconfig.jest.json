@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": false,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "target": "ES2019",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "types": ["jest", "node"],
+    "skipLibCheck": true,
+    "strictNullChecks": true
+  },
+  "include": [
+    "test/**/*.ts",
+    "src/**/*.ts"
+  ]
+}

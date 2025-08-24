@@ -1,9 +1,37 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "rootDir": "../",
+  "moduleFileExtensions": ["ts", "js", "json"],
+  "testMatch": ["<rootDir>/test/**/*.e2e-spec.ts"],
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+    "^.+\\.ts$": [
+      "ts-jest",
+      {
+        "tsconfig": {
+          "module": "commonjs",
+          "moduleResolution": "nodenext",
+          "target": "ES2019",
+          "esModuleInterop": true,
+          "isolatedModules": false,
+          "emitDecoratorMetadata": true,
+          "experimentalDecorators": true,
+          "useDefineForClassFields": false,
+          "skipLibCheck": true,
+          "strictNullChecks": true,
+          "types": ["jest", "node"]
+        },
+        "useESM": false,
+        "diagnostics": false
+      }
+    ]
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!mongodb-memory-server)"
+  ],
+  "moduleNameMapper": {
+    "^ioredis$": "ioredis-mock",
+    "^serialport$": "<rootDir>/test/mocks/serialport.ts"
+  },
+  "setupFiles": ["reflect-metadata"],
+  "setupFilesAfterEnv": ["<rootDir>/test/setup/jest-setup.cjs"]
 }

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Req,
   UnauthorizedException,
@@ -28,6 +29,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @HttpCode(200)
   async login(@Body() dto: LoginDto) {
     return await this.authService.login(dto);
   }

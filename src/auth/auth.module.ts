@@ -13,6 +13,7 @@ import { RolesGuard } from './roles.guard';
 import { User, UserSchema } from '../users/user.schema';
 import { Tenant, TenantSchema } from '../tenants/tenant.schema';
 import { Membership, MembershipSchema } from '../memberships/membership.schema';
+import { RbacModule } from '../rbac/rbac.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { Membership, MembershipSchema } from '../memberships/membership.schema';
       { name: Tenant.name, schema: TenantSchema },
       { name: Membership.name, schema: MembershipSchema },
     ]),
+    RbacModule,
   ],
   controllers: [AuthController],
   providers: [

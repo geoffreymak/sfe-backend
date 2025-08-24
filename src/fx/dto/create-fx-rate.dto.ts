@@ -1,15 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsEnum,
-  IsString,
-  Length,
-  Matches,
-} from 'class-validator';
+import { IsDateString, IsIn, IsString, Length, Matches } from 'class-validator';
 
 export class CreateFxRateDto {
   @ApiProperty({ enum: ['CDF'], default: 'CDF' })
-  @IsEnum(['CDF'])
+  @IsIn(['CDF'])
   base!: 'CDF';
 
   @ApiProperty({ example: 'USD' })

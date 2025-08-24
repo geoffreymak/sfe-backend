@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import {
   Invoice,
   InvoiceCounter,
@@ -74,8 +74,18 @@ export class InvoicesService {
     const vatRate = TaxGroupMeta[group]?.vatRate;
     const rate = typeof vatRate === 'number' ? vatRate : 0;
 
-    const qTh = parseQtyToThousandths(line.qty);
-    const unitCents = parseMoneyToCents(line.unitPrice);
+    let qTh: bigint;
+    let unitCents: Cents;
+    try {
+      qTh = parseQtyToThousandths(line.qty);
+    } catch {
+      throw new BadRequestException('Invalid qty format');
+    }
+    try {
+      unitCents = parseMoneyToCents(line.unitPrice);
+    } catch {
+      throw new BadRequestException('Invalid unitPrice format');
+    }
 
     if (modePrix === 'HT') {
       const totalHT = mulQtyPriceToCents(qTh, unitCents);
@@ -96,9 +106,27 @@ export class InvoicesService {
     return Types.Decimal128.fromString(centsToString(c));
   }
 
+  // Narrow MongoDB duplicate key error code from unknown
+  private getMongoErrorCode(err: unknown): number | undefined {
+    if (
+      err &&
+      typeof err === 'object' &&
+      'code' in (err as Record<string, unknown>)
+    ) {
+      const code = (err as { code?: unknown }).code;
+      return typeof code === 'number' ? code : undefined;
+    }
+    return undefined;
+  }
+
   async createDraft(dto: CreateInvoiceDto): Promise<InvoiceDocument> {
     if (!dto.lines || dto.lines.length === 0) {
       throw new BadRequestException('Invoice requires at least one line');
+    }
+
+    // Ensure client snapshot is provided to avoid runtime errors further down
+    if (!dto.client) {
+      throw new BadRequestException('client is required');
     }
 
     let sumHT: Cents = 0n;
@@ -110,23 +138,52 @@ export class InvoicesService {
       sumHT += res.totalHT;
       sumVAT += res.totalVAT;
       sumTTC += res.totalTTC;
+
+      // Validate and convert itemId
+      let itemId: Types.ObjectId | undefined;
+      if (l.itemId) {
+        if (!Types.ObjectId.isValid(l.itemId)) {
+          throw new BadRequestException('Invalid itemId');
+        }
+        itemId = new Types.ObjectId(l.itemId);
+      }
+
+      // Validate and convert qty/unitPrice to Decimal128
+      let qtyD128: Types.Decimal128;
+      let unitPriceD128: Types.Decimal128;
+      try {
+        qtyD128 = Types.Decimal128.fromString(l.qty);
+      } catch {
+        throw new BadRequestException('Invalid qty format');
+      }
+      try {
+        unitPriceD128 = Types.Decimal128.fromString(l.unitPrice);
+      } catch {
+        throw new BadRequestException('Invalid unitPrice format');
+      }
+
       return {
-        itemId: l.itemId ? new Types.ObjectId(l.itemId) : undefined,
+        itemId,
         kind: l.kind,
         group: l.group,
         label: l.label,
-        qty: Types.Decimal128.fromString(l.qty),
-        unitPrice: Types.Decimal128.fromString(l.unitPrice),
+        qty: qtyD128,
+        unitPrice: unitPriceD128,
         totalHT: this.toD128(res.totalHT),
         totalVAT: this.toD128(res.totalVAT),
         totalTTC: this.toD128(res.totalTTC),
       };
     });
 
+    // Ensure tenant context is present and explicitly set on the document
+    const tenantId = getTenantId();
+    if (!tenantId) throw new BadRequestException('Tenant context missing');
+
     const toCreate: Partial<Invoice> = {
       status: 'DRAFT',
       modePrix: dto.modePrix,
       type: dto.type,
+      tenantId: new Types.ObjectId(tenantId),
       client: {
         type: dto.client.type,
         denomination: dto.client.denomination,
@@ -157,9 +214,12 @@ export class InvoicesService {
     return doc;
   }
 
-  private async nextNumberFor(invoice: InvoiceDocument): Promise<string> {
+  private async nextNumberFor(
+    invoice: InvoiceDocument,
+    session?: ClientSession | null,
+  ): Promise<string> {
     const tenantId = getTenantId();
-    if (!tenantId) throw new Error('Missing tenantId in context');
+    if (!tenantId) throw new BadRequestException('Tenant context missing');
     const settings = await this.settings.get(tenantId);
     const cfg = settings.invoice?.numbering ?? {
       prefix: invoice.type,
@@ -168,19 +228,56 @@ export class InvoicesService {
     };
     const now = new Date();
     const year = now.getFullYear();
-    const countDoc = await this.counterModel.findOneAndUpdate(
-      {
-        tenantId: new Types.ObjectId(tenantId),
-        type: invoice.type,
-        year: cfg.yearlyReset ? year : 0,
-      },
-      { $inc: { seq: 1 } },
-      { new: true, upsert: true },
-    );
+    // Retry a few times to tolerate unique index races on first upsert
+    const query = {
+      tenantId: new Types.ObjectId(tenantId),
+      type: invoice.type,
+      year: cfg.yearlyReset ? year : 0,
+    } as const;
+
+    let countDoc: InvoiceCounterDocument | null = null;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        countDoc = await this.counterModel.findOneAndUpdate(
+          query,
+          { $inc: { seq: 1 } },
+          {
+            new: true,
+            upsert: true,
+            setDefaultsOnInsert: true,
+            // pass-through session if provided
+            session: session ?? undefined,
+          },
+        );
+        break;
+      } catch (e: unknown) {
+        const code = this.getMongoErrorCode(e);
+        // Duplicate key on unique (tenantId,type,year) due to race
+        if (code === 11000) {
+          this.logger.warn(
+            `InvoiceCounter upsert race detected for ${invoice.type}/${year}, retrying... (attempt ${
+              attempt + 1
+            }/5)`,
+          );
+          await new Promise((r) => setTimeout(r, 10));
+          continue;
+        }
+        throw e;
+      }
+    }
+    if (!countDoc) {
+      // Last resort fetch without inc to diagnose
+      countDoc = await this.counterModel
+        .findOne(query)
+        .session(session ?? null)
+        .exec();
+      if (!countDoc)
+        throw new BadRequestException('Failed to allocate invoice number');
+    }
     const seq = String(countDoc.seq).padStart(cfg.width ?? 6, '0');
-    return cfg.yearlyReset
-      ? `${cfg.prefix}${year}-${seq}`
-      : `${cfg.prefix}${seq}`;
+    // Ensure numbering is unique across invoice types by using the type as prefix
+    const prefix = invoice.type; // e.g., FV, FA, EA, etc.
+    return cfg.yearlyReset ? `${prefix}${year}-${seq}` : `${prefix}${seq}`;
   }
 
   private enforceConfirmRules(inv: InvoiceDocument) {
@@ -204,56 +301,79 @@ export class InvoicesService {
 
   async confirm(id: string, opts: ConfirmOptions): Promise<InvoiceDocument> {
     const _id = new Types.ObjectId(id);
-    const inv = await this.invoiceModel.findById(_id);
-    if (!inv) throw new NotFoundException('Invoice not found');
-    if (inv.status !== 'DRAFT') {
-      // idempotent confirm: log and return
-      try {
-        await this.audit.log({
-          action: 'invoice.confirm.idempotent',
-          resource: 'invoice',
-          resourceId: inv._id,
-          after: inv.toObject(),
-        });
-      } catch (err) {
-        this.logger.warn(
-          'Audit log failed (invoice.confirm.idempotent)',
-          err as Error,
-        );
-      }
-      return inv; // idempotent behavior at model level
-    }
 
-    // Validations
-    this.enforceConfirmRules(inv);
-
-    // Equivalent currency
-    if (opts.equivalentCurrencyCode) {
-      const fx = await this.fx.latest(opts.equivalentCurrencyCode);
-      inv.equivalentCurrency = {
-        code: fx.quote,
-        rate: fx.rate,
-        provider: fx.provider,
-        at: fx.validFrom,
-      };
-    }
-
-    const before = inv.toObject();
-    inv.number = await this.nextNumberFor(inv);
-    inv.status = 'CONFIRMED';
-    await inv.save();
+    // Use a transaction to atomically allocate a number and confirm the invoice
+    const session = await this.invoiceModel.db.startSession();
     try {
-      await this.audit.log({
-        action: 'invoice.confirm',
-        resource: 'invoice',
-        resourceId: inv._id,
-        before,
-        after: inv.toObject(),
+      let confirmed: InvoiceDocument | null = null;
+      await session.withTransaction(async () => {
+        const inv = await this.invoiceModel.findById(_id).session(session);
+        if (!inv) throw new NotFoundException('Invoice not found');
+        if (inv.status !== 'DRAFT') {
+          confirmed = inv; // idempotent: already confirmed
+          return;
+        }
+
+        // Validations
+        this.enforceConfirmRules(inv);
+
+        // Equivalent currency
+        if (opts.equivalentCurrencyCode) {
+          const fx = await this.fx.latest(opts.equivalentCurrencyCode);
+          inv.equivalentCurrency = {
+            code: fx.quote,
+            rate: fx.rate,
+            provider: fx.provider,
+            at: fx.validFrom,
+          };
+        }
+
+        const before = inv.toObject();
+        inv.number = await this.nextNumberFor(inv, session);
+        inv.status = 'CONFIRMED';
+        await inv.save({ session });
+
+        confirmed = inv;
+
+        // We keep audit outside of the transaction to avoid aborting confirm on audit failure
+        try {
+          await this.audit.log({
+            action: 'invoice.confirm',
+            resource: 'invoice',
+            resourceId: inv._id,
+            before,
+            after: inv.toObject(),
+          });
+        } catch (err) {
+          this.logger.warn('Audit log failed (invoice.confirm)', err as Error);
+        }
       });
-    } catch (err) {
-      this.logger.warn('Audit log failed (invoice.confirm)', err as Error);
+
+      if (!confirmed) {
+        // In case transaction early-returned due to idempotency, fetch latest state
+        const inv = await this.invoiceModel.findById(_id).exec();
+        if (!inv) throw new NotFoundException('Invoice not found');
+        // Log idempotent confirm
+        try {
+          await this.audit.log({
+            action: 'invoice.confirm.idempotent',
+            resource: 'invoice',
+            resourceId: inv._id,
+            after: inv.toObject(),
+          });
+        } catch (err) {
+          this.logger.warn(
+            'Audit log failed (invoice.confirm.idempotent)',
+            err as Error,
+          );
+        }
+        return inv;
+      }
+
+      return confirmed;
+    } finally {
+      await session.endSession();
     }
-    return inv;
   }
 
   async get(id: string): Promise<InvoiceDocument> {

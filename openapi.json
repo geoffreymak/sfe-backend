@@ -1,0 +1,3797 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/settings": {
+      "get": {
+        "operationId": "SettingsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Settings"
+        ]
+      },
+      "put": {
+        "operationId": "SettingsController_put",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/settings/public": {
+      "get": {
+        "operationId": "SettingsController_getPublic",
+        "parameters": [
+          {
+            "name": "x-tenant-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/currencies": {
+      "get": {
+        "operationId": "CurrenciesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Currencies"
+        ]
+      },
+      "post": {
+        "operationId": "CurrenciesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCurrencyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Currencies"
+        ]
+      }
+    },
+    "/currencies/{code}": {
+      "patch": {
+        "operationId": "CurrenciesController_update",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCurrencyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Currencies"
+        ]
+      },
+      "delete": {
+        "operationId": "CurrenciesController_remove",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Currencies"
+        ]
+      }
+    },
+    "/fx-rates": {
+      "post": {
+        "operationId": "FxController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFxRateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "FX"
+        ]
+      },
+      "get": {
+        "operationId": "FxController_list",
+        "parameters": [
+          {
+            "name": "quote",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "FX"
+        ]
+      }
+    },
+    "/fx-rates/latest": {
+      "get": {
+        "operationId": "FxController_latest",
+        "parameters": [
+          {
+            "name": "quote",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "FX"
+        ]
+      }
+    },
+    "/clients": {
+      "get": {
+        "operationId": "ClientsController_list",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search query",
+            "schema": {
+              "example": "ACME",
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PP",
+                "PM",
+                "PC",
+                "PL",
+                "AO"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List clients with pagination"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clients"
+        ]
+      },
+      "post": {
+        "operationId": "ClientsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientDto"
+              },
+              "examples": {
+                "PP": {
+                  "summary": "PP (Personne Physique) minimal",
+                  "value": {
+                    "type": "PP",
+                    "name": "John Doe",
+                    "email": "john@example.com"
+                  }
+                },
+                "PM": {
+                  "summary": "PM requires denomination + nif",
+                  "value": {
+                    "type": "PM",
+                    "denomination": "ACME SARL",
+                    "nif": "A1234567C"
+                  }
+                },
+                "PC": {
+                  "summary": "PC requires name + nif",
+                  "value": {
+                    "type": "PC",
+                    "name": "Ecole Primaire",
+                    "nif": "B7654321Z"
+                  }
+                },
+                "PL": {
+                  "summary": "PL requires name + nif",
+                  "value": {
+                    "type": "PL",
+                    "name": "Dr. Kabila",
+                    "nif": "C1112223X"
+                  }
+                },
+                "AO": {
+                  "summary": "AO requires name + refExo",
+                  "value": {
+                    "type": "AO",
+                    "name": "Ambassade USA",
+                    "refExo": "EXO-12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Client created"
+          },
+          "400": {
+            "description": "Validation failed for type-specific requirements"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "operationId": "ClientsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client detail"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clients"
+        ]
+      },
+      "patch": {
+        "operationId": "ClientsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Client updated"
+          },
+          "400": {
+            "description": "Validation failed for type-specific requirements"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clients"
+        ]
+      },
+      "delete": {
+        "operationId": "ClientsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/loyalty/enroll": {
+      "post": {
+        "operationId": "LoyaltyController_enroll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollDto"
+              },
+              "examples": {
+                "enroll": {
+                  "summary": "Enroll client",
+                  "value": {
+                    "clientId": "64f0c0c0c0c0c0c0c0c0c0c0",
+                    "cardId": "CARD-0001"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Loyalty"
+        ]
+      }
+    },
+    "/loyalty/redeem": {
+      "post": {
+        "operationId": "LoyaltyController_redeem",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemDto"
+              },
+              "examples": {
+                "redeem": {
+                  "summary": "Redeem 100 points",
+                  "value": {
+                    "clientId": "64f0c0c0c0c0c0c0c0c0c0c0",
+                    "points": 100,
+                    "reason": "Reward redemption",
+                    "idempotencyKey": "redeem-INV-2025-000123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Loyalty"
+        ]
+      }
+    },
+    "/loyalty/transactions": {
+      "get": {
+        "operationId": "LoyaltyController_list",
+        "parameters": [
+          {
+            "name": "clientId",
+            "required": true,
+            "in": "query",
+            "description": "Client ObjectId",
+            "schema": {
+              "example": "64f0c0c0c0c0c0c0c0c0c0c0",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List loyalty transactions for a client"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Loyalty"
+        ]
+      }
+    },
+    "/items": {
+      "get": {
+        "operationId": "ItemsController_list",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search in code, name, barcode",
+            "schema": {
+              "example": "STYLO",
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BIE",
+                "SER",
+                "TAX"
+              ]
+            }
+          },
+          {
+            "name": "taxGroup",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J",
+                "K",
+                "L",
+                "M",
+                "N",
+                "O",
+                "P"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List items with pagination and search"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Items"
+        ]
+      },
+      "post": {
+        "operationId": "ItemsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateItemDto"
+              },
+              "examples": {
+                "BIE_B": {
+                  "summary": "BIE (Bien) groupe B",
+                  "value": {
+                    "code": "SKU-001",
+                    "name": "Stylo bille bleu",
+                    "type": "BIE",
+                    "unit": "pcs",
+                    "taxGroupDefault": "B",
+                    "priceHT": "1000.00",
+                    "stockTracking": "simple"
+                  }
+                },
+                "SER_C": {
+                  "summary": "SER (Service) groupe C",
+                  "value": {
+                    "code": "SER-001",
+                    "name": "Installation sur site",
+                    "type": "SER",
+                    "unit": "hrs",
+                    "taxGroupDefault": "C",
+                    "priceTTC": "108.00"
+                  }
+                },
+                "TAX_L_valid": {
+                  "summary": "TAX (Parafiscale) groupe L - valide",
+                  "value": {
+                    "code": "TAX-L-01",
+                    "name": "Taxe parafiscale L",
+                    "type": "TAX",
+                    "unit": "u",
+                    "taxGroupDefault": "L",
+                    "priceTTC": "10.00"
+                  }
+                },
+                "TAX_B_invalid": {
+                  "summary": "TAX groupe B - 400 attendu",
+                  "value": {
+                    "code": "TAX-B-01",
+                    "name": "Taxe invalide",
+                    "type": "TAX",
+                    "unit": "u",
+                    "taxGroupDefault": "B",
+                    "priceHT": "10.00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item created"
+          },
+          "400": {
+            "description": "Validation failed: price XOR or TAX group constraint"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Items"
+        ]
+      }
+    },
+    "/items/{id}": {
+      "get": {
+        "operationId": "ItemsController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item detail"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Items"
+        ]
+      },
+      "patch": {
+        "operationId": "ItemsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item updated"
+          },
+          "400": {
+            "description": "Validation failed: price XOR or TAX group constraint"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Items"
+        ]
+      },
+      "delete": {
+        "operationId": "ItemsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Items"
+        ]
+      }
+    },
+    "/warehouses": {
+      "get": {
+        "operationId": "WarehousesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List warehouses"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Warehouses"
+        ]
+      },
+      "post": {
+        "operationId": "WarehousesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWarehouseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Warehouse created"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Warehouses"
+        ]
+      }
+    },
+    "/warehouses/{id}": {
+      "get": {
+        "operationId": "WarehousesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Warehouse detail"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Warehouses"
+        ]
+      },
+      "patch": {
+        "operationId": "WarehousesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWarehouseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Warehouse updated"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Warehouses"
+        ]
+      },
+      "delete": {
+        "operationId": "WarehousesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Warehouse deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Warehouses"
+        ]
+      }
+    },
+    "/stock/receipts": {
+      "post": {
+        "operationId": "StockController_receipts",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReceiptDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stock receipt processed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Stock"
+        ]
+      }
+    },
+    "/stock/transfers": {
+      "post": {
+        "operationId": "StockController_transfers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stock transfer processed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Stock"
+        ]
+      }
+    },
+    "/stock/adjustments": {
+      "post": {
+        "operationId": "StockController_adjustments",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stock adjustment processed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Stock"
+        ]
+      }
+    },
+    "/stock/alerts": {
+      "get": {
+        "operationId": "StockController_alerts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Low stock alerts"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Stock"
+        ]
+      }
+    },
+    "/invoices/draft": {
+      "post": {
+        "operationId": "InvoicesController_draft",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Draft created"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create invoice draft and compute totals",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/invoices/{id}/confirm": {
+      "post": {
+        "operationId": "InvoicesController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invoice confirmed (idempotent)"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Confirm draft invoice with DGI checks",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/invoices/{id}": {
+      "get": {
+        "operationId": "InvoicesController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get invoice by id"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/invoices": {
+      "get": {
+        "operationId": "InvoicesController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List invoices"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/invoices/{id}/normalized": {
+      "get": {
+        "operationId": "InvoicesController_normalized",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get normalized payload with sha256"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/invoices/{id}/pdf": {
+      "get": {
+        "operationId": "InvoicesController_pdfBinary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PDF binary"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate invoice PDF",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/integrations/status": {
+      "get": {
+        "operationId": "IntegrationsController_status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Integration status summary by current mode"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Integrations"
+        ]
+      }
+    },
+    "/invoices/{id}/normalize": {
+      "post": {
+        "operationId": "OrchestratorController_normalize",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Normalize invoice by integration mode and return result"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
+    "/reports/mcf-journal": {
+      "get": {
+        "operationId": "ReportsController_mcfJournal",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "pending",
+                "ack",
+                "rejected"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Journal page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "number"
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "number": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "securitySource": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "attempts": {
+                            "type": "number"
+                          },
+                          "lastError": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "page": 1,
+                    "limit": 50,
+                    "total": 1,
+                    "items": [
+                      {
+                        "id": "662f...abc",
+                        "number": "FV/2025/000001",
+                        "status": "CONFIRMED",
+                        "type": "FC",
+                        "securitySource": "emcf",
+                        "state": "ack",
+                        "attempts": 2,
+                        "lastError": null,
+                        "createdAt": "2025-01-20T10:00:00.000Z",
+                        "updatedAt": "2025-01-20T10:05:12.000Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "MCF/e-MCF dispatch journal",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/sales-summary": {
+      "get": {
+        "operationId": "ReportsController_salesSummary",
+        "parameters": [
+          {
+            "name": "groupBy",
+            "required": false,
+            "in": "query",
+            "description": "Grouping dimension",
+            "schema": {
+              "enum": [
+                "day",
+                "month",
+                "type",
+                "group"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "ISO date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "ISO date",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary totals and top lists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summary": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "totalTTC": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "totals": {
+                      "type": "object",
+                      "properties": {
+                        "totalTTC": {
+                          "type": "string"
+                        },
+                        "count": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "topItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "totalTTC": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "topClients": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "nif": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "totalTTC": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "summary": [
+                      {
+                        "key": "2025-01-20",
+                        "totalTTC": "120000.00",
+                        "count": 3
+                      },
+                      {
+                        "key": "2025-01-21",
+                        "totalTTC": "80000.00",
+                        "count": 2
+                      }
+                    ],
+                    "totals": {
+                      "totalTTC": "200000.00",
+                      "count": 5
+                    },
+                    "topItems": [
+                      {
+                        "label": "Biscuit 50g",
+                        "totalTTC": "70000.00"
+                      },
+                      {
+                        "label": "Coca 50cl",
+                        "totalTTC": "50000.00"
+                      }
+                    ],
+                    "topClients": [
+                      {
+                        "name": "ACME SA",
+                        "nif": "A1234567",
+                        "totalTTC": "150000.00"
+                      },
+                      {
+                        "name": "John Doe",
+                        "nif": null,
+                        "totalTTC": "50000.00"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Sales summary (confirmed invoices)",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/audit": {
+      "get": {
+        "operationId": "AuditController_list",
+        "parameters": [
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by actor (user) id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Filter by action name (e.g., invoice.confirm)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "required": false,
+            "in": "query",
+            "description": "Filter by resource (e.g., invoices, items)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resourceId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by resource id (ObjectId)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Filter from date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "Filter to date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List audit logs with filters"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Audit"
+        ]
+      }
+    },
+    "/rbac/permissions/catalog": {
+      "get": {
+        "operationId": "RbacController_listPermissions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/roles": {
+      "get": {
+        "operationId": "RbacController_listRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      },
+      "post": {
+        "operationId": "RbacController_createRole",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/roles/{id}": {
+      "patch": {
+        "operationId": "RbacController_updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      },
+      "delete": {
+        "operationId": "RbacController_deleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/users/{userId}/memberships/{tenantId}": {
+      "get": {
+        "operationId": "RbacController_getMembershipByPath",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/users/{userId}/memberships/{tenantId}/roles": {
+      "put": {
+        "operationId": "RbacController_setMembershipRolesByPath",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRolesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/me/roles": {
+      "get": {
+        "operationId": "RbacController_myRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/me/permissions": {
+      "get": {
+        "operationId": "RbacController_myPermissions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/rbac/roles/seed-defaults": {
+      "post": {
+        "operationId": "RbacController_seedDefaults",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "RBAC"
+        ]
+      }
+    },
+    "/me/profile": {
+      "get": {
+        "operationId": "ProfileController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      },
+      "put": {
+        "operationId": "ProfileController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/me/password": {
+      "patch": {
+        "operationId": "ProfileController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/me/roles": {
+      "get": {
+        "operationId": "ProfileController_myRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/me/permissions": {
+      "get": {
+        "operationId": "ProfileController_myPermissions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_list",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      },
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_getOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_softDelete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      }
+    },
+    "/users/{id}/status": {
+      "put": {
+        "operationId": "UsersController_setStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      }
+    },
+    "/users/{id}/roles": {
+      "get": {
+        "operationId": "UsersController_getRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_setRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRolesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      }
+    },
+    "/users/{id}/default-tenant": {
+      "put": {
+        "operationId": "UsersController_setDefaultTenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetDefaultTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users (Admin)"
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "SFE API",
+    "description": "OpenAPI autogénéré depuis le code",
+    "version": "v1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "X-Tenant-Id": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Tenant-Id",
+        "description": "Tenant context header"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "organizationName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "SettingsCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string",
+            "enum": [
+              "CDF"
+            ],
+            "default": "CDF"
+          },
+          "defaultAlt": {
+            "type": "string",
+            "example": "USD",
+            "default": "USD"
+          },
+          "allowed": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "decimals": {
+            "type": "number",
+            "example": 2,
+            "default": 2
+          },
+          "rounding": {
+            "type": "string",
+            "enum": [
+              "HALF_UP"
+            ],
+            "default": "HALF_UP"
+          }
+        },
+        "required": [
+          "base",
+          "defaultAlt",
+          "allowed",
+          "decimals",
+          "rounding"
+        ]
+      },
+      "SettingsInvoiceNumberingDto": {
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "type": "string",
+            "example": "FV",
+            "default": "FV"
+          },
+          "yearlyReset": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          },
+          "width": {
+            "type": "number",
+            "example": 6,
+            "default": 6
+          }
+        },
+        "required": [
+          "prefix",
+          "yearlyReset",
+          "width"
+        ]
+      },
+      "SettingsInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "defaultModePrix": {
+            "type": "string",
+            "enum": [
+              "HT",
+              "TTC"
+            ],
+            "default": "TTC"
+          },
+          "numbering": {
+            "$ref": "#/components/schemas/SettingsInvoiceNumberingDto"
+          },
+          "idempotencyTTLHours": {
+            "type": "number",
+            "example": 24,
+            "default": 24
+          }
+        },
+        "required": [
+          "defaultModePrix",
+          "numbering",
+          "idempotencyTTLHours"
+        ]
+      },
+      "SettingsLoyaltyEarnDto": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string",
+            "enum": [
+              "HT",
+              "TTC"
+            ],
+            "default": "TTC"
+          },
+          "rate": {
+            "type": "number",
+            "example": 1,
+            "default": 1
+          },
+          "baseUnit": {
+            "type": "number",
+            "example": 1000,
+            "default": 1000
+          },
+          "excludeTaxGroups": {
+            "default": [
+              "L",
+              "N"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "base",
+          "rate",
+          "baseUnit",
+          "excludeTaxGroups"
+        ]
+      },
+      "SettingsLoyaltyRedeemDto": {
+        "type": "object",
+        "properties": {
+          "pointValueCDF": {
+            "type": "number",
+            "example": 10,
+            "default": 10
+          }
+        },
+        "required": [
+          "pointValueCDF"
+        ]
+      },
+      "SettingsLoyaltyDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "example": false,
+            "default": false
+          },
+          "earn": {
+            "$ref": "#/components/schemas/SettingsLoyaltyEarnDto"
+          },
+          "redeem": {
+            "$ref": "#/components/schemas/SettingsLoyaltyRedeemDto"
+          }
+        },
+        "required": [
+          "enabled",
+          "earn",
+          "redeem"
+        ]
+      },
+      "SettingsStockDto": {
+        "type": "object",
+        "properties": {
+          "costingMethod": {
+            "type": "string",
+            "enum": [
+              "AVG",
+              "FIFO"
+            ],
+            "default": "AVG"
+          },
+          "allowNegativeStock": {
+            "type": "boolean",
+            "example": false,
+            "default": false
+          },
+          "reservationsEnabled": {
+            "type": "boolean",
+            "example": false,
+            "default": false
+          }
+        },
+        "required": [
+          "costingMethod",
+          "allowNegativeStock",
+          "reservationsEnabled"
+        ]
+      },
+      "SettingsIntegrationEmcfDto": {
+        "type": "object",
+        "properties": {
+          "baseUrlInfo": {
+            "type": "string"
+          },
+          "baseUrlInvoice": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "isf": {
+            "type": "string"
+          },
+          "nif": {
+            "type": "string"
+          }
+        }
+      },
+      "SettingsIntegrationMcfDto": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "type": "number"
+          },
+          "baud": {
+            "type": "number"
+          },
+          "dataBits": {
+            "type": "number"
+          },
+          "parity": {
+            "type": "string"
+          },
+          "stopBits": {
+            "type": "number"
+          },
+          "isf": {
+            "type": "string"
+          },
+          "nif": {
+            "type": "string"
+          }
+        }
+      },
+      "SettingsIntegrationSafetyDto": {
+        "type": "object",
+        "properties": {
+          "subtotalCheck": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          },
+          "confirmDeadlineSec": {
+            "type": "number",
+            "example": 120,
+            "default": 120
+          },
+          "pendingMax": {
+            "type": "number",
+            "example": 10,
+            "default": 10
+          }
+        },
+        "required": [
+          "subtotalCheck",
+          "confirmDeadlineSec",
+          "pendingMax"
+        ]
+      },
+      "SettingsIntegrationDto": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "emcf",
+              "mcf",
+              "mock"
+            ],
+            "default": "mock"
+          },
+          "emcf": {
+            "$ref": "#/components/schemas/SettingsIntegrationEmcfDto"
+          },
+          "mcf": {
+            "$ref": "#/components/schemas/SettingsIntegrationMcfDto"
+          },
+          "safety": {
+            "$ref": "#/components/schemas/SettingsIntegrationSafetyDto"
+          }
+        },
+        "required": [
+          "mode",
+          "safety"
+        ]
+      },
+      "UpdateSettingsDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/SettingsCurrencyDto"
+          },
+          "invoice": {
+            "$ref": "#/components/schemas/SettingsInvoiceDto"
+          },
+          "loyalty": {
+            "$ref": "#/components/schemas/SettingsLoyaltyDto"
+          },
+          "stock": {
+            "$ref": "#/components/schemas/SettingsStockDto"
+          },
+          "integration": {
+            "$ref": "#/components/schemas/SettingsIntegrationDto"
+          }
+        },
+        "required": [
+          "currency",
+          "invoice",
+          "loyalty",
+          "stock",
+          "integration"
+        ]
+      },
+      "CreateCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "EUR"
+          },
+          "name": {
+            "type": "string",
+            "example": "Euro"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "€"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "UpdateCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Euro"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "€"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "CreateFxRateDto": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "string",
+            "enum": [
+              "CDF"
+            ],
+            "default": "CDF"
+          },
+          "quote": {
+            "type": "string",
+            "example": "USD"
+          },
+          "rate": {
+            "type": "string",
+            "example": "2750.50",
+            "description": "Decimal rate as string"
+          },
+          "validFrom": {
+            "type": "string",
+            "example": "2025-08-24T17:57:26.444Z",
+            "description": "ISO date-time the rate becomes valid"
+          }
+        },
+        "required": [
+          "base",
+          "quote",
+          "rate",
+          "validFrom"
+        ]
+      },
+      "CreateClientDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PP",
+              "PM",
+              "PC",
+              "PL",
+              "AO"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "example": "ACME SARL"
+          },
+          "denomination": {
+            "type": "string",
+            "example": "ACME SARL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jean Kabila"
+          },
+          "nif": {
+            "type": "string",
+            "example": "A1234567C"
+          },
+          "refExo": {
+            "type": "string",
+            "example": "EXO-12345"
+          },
+          "email": {
+            "type": "string",
+            "example": "client@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+243811234567"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "UpdateClientDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PP",
+              "PM",
+              "PC",
+              "PL",
+              "AO"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "example": "ACME SARL"
+          },
+          "denomination": {
+            "type": "string",
+            "example": "ACME SARL"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jean Kabila"
+          },
+          "nif": {
+            "type": "string",
+            "example": "A1234567C"
+          },
+          "refExo": {
+            "type": "string",
+            "example": "EXO-12345"
+          },
+          "email": {
+            "type": "string",
+            "example": "client@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+243811234567"
+          }
+        }
+      },
+      "EnrollDto": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "Client ObjectId",
+            "example": "64f0c0c0c0c0c0c0c0c0c0c0"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "Optional card identifier",
+            "example": "CARD-0001"
+          }
+        },
+        "required": [
+          "clientId"
+        ]
+      },
+      "RedeemDto": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "description": "Client ObjectId",
+            "example": "64f0c0c0c0c0c0c0c0c0c0c0"
+          },
+          "points": {
+            "type": "number",
+            "description": "Points to redeem",
+            "example": 100
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason",
+            "example": "Reward redemption"
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "description": "Idempotency key",
+            "example": "redeem-INV-2025-000123"
+          }
+        },
+        "required": [
+          "clientId",
+          "points",
+          "reason",
+          "idempotencyKey"
+        ]
+      },
+      "CreateItemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "SKU-001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Stylo bille bleu"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BIE",
+              "SER",
+              "TAX"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "example": "pcs"
+          },
+          "barcode": {
+            "type": "string",
+            "example": "1234567890123"
+          },
+          "taxGroupDefault": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "P"
+            ],
+            "description": "A..P"
+          },
+          "priceHT": {
+            "type": "string",
+            "example": "1000.00",
+            "description": "Prix HT (string number)"
+          },
+          "priceTTC": {
+            "type": "string",
+            "example": "1160.00",
+            "description": "Prix TTC (string number)"
+          },
+          "stockTracking": {
+            "type": "string",
+            "enum": [
+              "none",
+              "simple",
+              "lot",
+              "serial"
+            ],
+            "default": "none"
+          },
+          "reorderPoint": {
+            "type": "string",
+            "example": "10"
+          },
+          "minStock": {
+            "type": "string",
+            "example": "0"
+          },
+          "maxStock": {
+            "type": "string",
+            "example": "100"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "type",
+          "unit",
+          "taxGroupDefault"
+        ]
+      },
+      "UpdateItemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "SKU-001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Stylo bille bleu"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BIE",
+              "SER",
+              "TAX"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "example": "pcs"
+          },
+          "barcode": {
+            "type": "string",
+            "example": "1234567890123"
+          },
+          "taxGroupDefault": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "P"
+            ],
+            "description": "A..P"
+          },
+          "priceHT": {
+            "type": "string",
+            "example": "1000.00"
+          },
+          "priceTTC": {
+            "type": "string",
+            "example": "1160.00"
+          },
+          "stockTracking": {
+            "type": "string",
+            "enum": [
+              "none",
+              "simple",
+              "lot",
+              "serial"
+            ]
+          },
+          "reorderPoint": {
+            "type": "string",
+            "example": "10"
+          },
+          "minStock": {
+            "type": "string",
+            "example": "0"
+          },
+          "maxStock": {
+            "type": "string",
+            "example": "100"
+          }
+        }
+      },
+      "CreateWarehouseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "WH-001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Entrepôt principal"
+          },
+          "address": {
+            "type": "string",
+            "example": "Av. 30 Juin, Kinshasa"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "UpdateWarehouseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "WH-001"
+          },
+          "name": {
+            "type": "string",
+            "example": "Entrepôt principal"
+          },
+          "address": {
+            "type": "string",
+            "example": "Av. 30 Juin, Kinshasa"
+          }
+        }
+      },
+      "ReceiptLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "qty": {
+            "type": "string",
+            "example": "10.0",
+            "description": "string decimal"
+          },
+          "unitCost": {
+            "type": "string",
+            "example": "100.00",
+            "description": "string decimal"
+          },
+          "lot": {
+            "type": "string",
+            "example": "LOT-2025-08"
+          },
+          "serials": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "itemId",
+          "qty"
+        ]
+      },
+      "ReceiptDto": {
+        "type": "object",
+        "properties": {
+          "warehouseId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReceiptLineDto"
+            }
+          }
+        },
+        "required": [
+          "warehouseId",
+          "lines"
+        ]
+      },
+      "TransferLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "qty": {
+            "type": "string",
+            "example": "5.0",
+            "description": "string decimal"
+          },
+          "lot": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "qty"
+        ]
+      },
+      "TransferDto": {
+        "type": "object",
+        "properties": {
+          "fromWarehouseId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "toWarehouseId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c1"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransferLineDto"
+            }
+          }
+        },
+        "required": [
+          "fromWarehouseId",
+          "toWarehouseId",
+          "lines"
+        ]
+      },
+      "AdjustmentLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "qtyDelta": {
+            "type": "string",
+            "example": "-2.0",
+            "description": "Delta quantity, string decimal"
+          },
+          "reason": {
+            "type": "string",
+            "example": "stock count correction"
+          },
+          "lot": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "qtyDelta",
+          "reason"
+        ]
+      },
+      "AdjustmentDto": {
+        "type": "object",
+        "properties": {
+          "warehouseId": {
+            "type": "string",
+            "example": "64f0c1b2b3c4d5e6f7a8b9c0"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdjustmentLineDto"
+            }
+          }
+        },
+        "required": [
+          "warehouseId",
+          "lines"
+        ]
+      },
+      "InvoiceClientDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PP",
+              "PM",
+              "PC",
+              "PL",
+              "AO"
+            ]
+          },
+          "denomination": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nif": {
+            "type": "string"
+          },
+          "refExo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "InvoiceLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "BIE",
+              "SER",
+              "TAX"
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "P"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "string",
+            "description": "quantity (string), scale 3"
+          },
+          "unitPrice": {
+            "type": "string",
+            "description": "unit price (string), scale 2"
+          }
+        },
+        "required": [
+          "kind",
+          "group",
+          "qty",
+          "unitPrice"
+        ]
+      },
+      "InvoiceAvoirDto": {
+        "type": "object",
+        "properties": {
+          "nature": {
+            "type": "string",
+            "enum": [
+              "COR",
+              "RAN",
+              "RAM",
+              "RRR"
+            ]
+          },
+          "originInvoiceRef": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "modePrix": {
+            "type": "string",
+            "enum": [
+              "HT",
+              "TTC"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FV",
+              "FT",
+              "FA",
+              "EV",
+              "ET",
+              "EA"
+            ]
+          },
+          "client": {
+            "$ref": "#/components/schemas/InvoiceClientDto"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceLineDto"
+            }
+          },
+          "avoir": {
+            "$ref": "#/components/schemas/InvoiceAvoirDto"
+          }
+        },
+        "required": [
+          "modePrix",
+          "type",
+          "client",
+          "lines"
+        ]
+      },
+      "EquivalentCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Currency code (quote) like USD",
+            "example": "USD"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "ConfirmInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "equivalentCurrency": {
+            "$ref": "#/components/schemas/EquivalentCurrencyDto"
+          }
+        }
+      },
+      "RoleCreateDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "MANAGER"
+          },
+          "name": {
+            "type": "string",
+            "example": "manager"
+          },
+          "description": {
+            "type": "string",
+            "example": "Can manage core resources"
+          },
+          "permissions": {
+            "example": [
+              "items:read",
+              "invoices:create"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "permissions"
+        ]
+      },
+      "RoleUpdateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SetRolesDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 40
+          },
+          "avatarUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "locale": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 10
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 40
+          }
+        }
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SetStatusDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SetDefaultTenantDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  },
+  "security": [
+    {
+      "X-Tenant-Id": []
+    }
+  ]
+}

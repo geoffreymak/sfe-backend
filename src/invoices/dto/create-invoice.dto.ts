@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
-  IsEnum,
+  IsIn,
+  IsDefined,
   IsOptional,
   IsString,
+  Matches,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -16,7 +18,7 @@ import {
 
 export class InvoiceClientDto {
   @ApiProperty({ enum: DGI_CLIENT_TYPES })
-  @IsEnum(DGI_CLIENT_TYPES)
+  @IsIn(DGI_CLIENT_TYPES)
   type!: (typeof DGI_CLIENT_TYPES)[number];
 
   @ApiProperty({ required: false })
@@ -43,7 +45,7 @@ export class InvoiceClientDto {
 export class InvoiceAvoirDto {
   @ApiProperty({ required: false, enum: ['COR', 'RAN', 'RAM', 'RRR'] })
   @IsOptional()
-  @IsEnum(['COR', 'RAN', 'RAM', 'RRR'])
+  @IsIn(['COR', 'RAN', 'RAM', 'RRR'])
   nature?: 'COR' | 'RAN' | 'RAM' | 'RRR';
 
   @ApiProperty({ required: false })
@@ -59,11 +61,11 @@ export class InvoiceLineDto {
   itemId?: string;
 
   @ApiProperty({ enum: DGI_ITEM_TYPES })
-  @IsEnum(DGI_ITEM_TYPES)
+  @IsIn(DGI_ITEM_TYPES)
   kind!: (typeof DGI_ITEM_TYPES)[number];
 
   @ApiProperty({ enum: DGI_TAX_GROUPS })
-  @IsEnum(DGI_TAX_GROUPS)
+  @IsIn(DGI_TAX_GROUPS)
   group!: (typeof DGI_TAX_GROUPS)[number];
 
   @ApiProperty({ required: false })
@@ -73,23 +75,30 @@ export class InvoiceLineDto {
 
   @ApiProperty({ description: 'quantity (string), scale 3' })
   @IsString()
+  @Matches(/^-?\d+(\.\d{1,3})?$/, {
+    message: 'qty must be a decimal string with up to 3 decimal places',
+  })
   qty!: string;
 
   @ApiProperty({ description: 'unit price (string), scale 2' })
   @IsString()
+  @Matches(/^-?\d+(\.\d{1,2})?$/, {
+    message: 'unitPrice must be a decimal string with up to 2 decimal places',
+  })
   unitPrice!: string;
 }
 
 export class CreateInvoiceDto {
   @ApiProperty({ enum: ['HT', 'TTC'] })
-  @IsEnum(['HT', 'TTC'])
+  @IsIn(['HT', 'TTC'])
   modePrix!: 'HT' | 'TTC';
 
   @ApiProperty({ enum: DGI_INVOICE_TYPES })
-  @IsEnum(DGI_INVOICE_TYPES)
+  @IsIn(DGI_INVOICE_TYPES)
   type!: (typeof DGI_INVOICE_TYPES)[number];
 
   @ApiProperty({ type: InvoiceClientDto })
+  @IsDefined({ message: 'client is required' })
   @ValidateNested()
   @Type(() => InvoiceClientDto)
   client!: InvoiceClientDto;

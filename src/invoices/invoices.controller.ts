@@ -34,6 +34,77 @@ function cacheKey(tenantId: string, invoiceId: string, idemKey: string) {
   return `${tenantId}:${invoiceId}:${idemKey}`;
 }
 
+// Safely convert a Mongoose document (or plain object) to a serializable plain object
+function isRecord(u: unknown): u is Record<string, unknown> {
+  return !!u && typeof u === 'object';
+}
+
+function toPlain(obj: unknown): Record<string, unknown> {
+  if (isRecord(obj)) return obj;
+  return {};
+}
+
+function hasToObject(obj: unknown): obj is { toObject: () => unknown } {
+  return (
+    !!obj && typeof (obj as { toObject?: unknown }).toObject === 'function'
+  );
+}
+
+function safeToObject(doc: unknown): Record<string, unknown> {
+  if (hasToObject(doc)) {
+    return toPlain((doc as { toObject: () => unknown }).toObject());
+  }
+  return toPlain(doc);
+}
+
+// Deep-serialize Mongo Decimal128 and other BSON-like values to JSON-friendly primitives
+function normalizeDecimalLike(v: unknown): unknown {
+  if (!v) return v;
+  // Dates -> ISO strings
+  if (v instanceof Date) return v.toISOString();
+  if (typeof v === 'object') {
+    const anyV = v as Record<string, unknown> & {
+      _bsontype?: unknown;
+      toString?: () => string;
+      toHexString?: () => string;
+    };
+    // MongoDB Decimal128 serialized shape
+    if (typeof anyV.$numberDecimal === 'string') return anyV.$numberDecimal;
+    // Direct BSON Decimal128 instance
+    if (
+      anyV._bsontype === 'Decimal128' &&
+      typeof anyV.toString === 'function'
+    ) {
+      return anyV.toString();
+    }
+    // MongoDB ObjectId instance (robust detection)
+    if (typeof anyV.toHexString === 'function') return anyV.toHexString();
+    if (
+      anyV._bsontype === 'ObjectID' ||
+      anyV._bsontype === 'ObjectId' ||
+      (anyV.constructor &&
+        (anyV.constructor as { name?: string }).name === 'ObjectId')
+    ) {
+      if (typeof anyV.toString === 'function') return anyV.toString();
+    }
+  }
+  return v;
+}
+
+function deepSerialize(value: unknown): unknown {
+  const n = normalizeDecimalLike(value);
+  if (n !== value) return n;
+  if (Array.isArray(value)) return value.map((it) => deepSerialize(it));
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = deepSerialize(v);
+    }
+    return out;
+  }
+  return value;
+}
+
 @ApiTags('Invoices')
 @ApiBearerAuth('bearer')
 @Controller('invoices')
@@ -49,9 +120,10 @@ export class InvoicesController {
   @ApiOkResponse({ description: 'Draft created' })
   @ApiBadRequestResponse({ description: 'Validation error' })
   @ApiBody({ type: CreateInvoiceDto })
-  async draft(@Body() dto: CreateInvoiceDto) {
+  async draft(@Body() dto: CreateInvoiceDto): Promise<Record<string, unknown>> {
     const doc = await this.service.createDraft(dto);
-    return doc.toObject();
+    const obj = safeToObject(doc);
+    return deepSerialize(obj) as Record<string, unknown>;
   }
 
   @Post(':id/confirm')
@@ -62,35 +134,40 @@ export class InvoicesController {
     @Param('id') id: string,
     @Body() dto: ConfirmInvoiceDto,
     @Headers('x-idempotency-key') idemKey?: string,
-  ) {
-    const tenantId = getTenantId();
-    const ttlHours = (await this.settings.get(tenantId!)).invoice
-      ?.idempotencyTTLHours;
-    const expiresAt = Date.now() + (ttlHours ?? 24) * 3600 * 1000;
-
+    @Res({ passthrough: true }) res?: Response,
+  ): Promise<Record<string, unknown>> {
     if (idemKey) {
+      const tenantId = getTenantId();
+      const ttlHours = (await this.settings.get(tenantId!)).invoice
+        ?.idempotencyTTLHours;
+      const expiresAt = Date.now() + (ttlHours ?? 24) * 3600 * 1000;
       const key = cacheKey(tenantId!, id, idemKey);
       const cached = idemCache.get(key);
-      if (cached && cached.expiresAt > Date.now()) return cached.value;
-      const res = await this.service.confirm(id, {
+      if (cached && cached.expiresAt > Date.now()) {
+        // Idempotency cache hit: return 200 OK with the cached body
+        if (res) res.status(200);
+        return toPlain(cached.value);
+      }
+      const doc = await this.service.confirm(id, {
         equivalentCurrencyCode: dto?.equivalentCurrency?.code,
       });
-      const obj = res.toObject();
-      idemCache.set(key, { value: obj, expiresAt });
-      return obj;
+      const obj = safeToObject(doc);
+      const out = deepSerialize(obj);
+      idemCache.set(key, { value: out, expiresAt });
+      return out as Record<string, unknown>;
     }
 
-    const res = await this.service.confirm(id, {
+    const doc = await this.service.confirm(id, {
       equivalentCurrencyCode: dto?.equivalentCurrency?.code,
     });
-    return res.toObject();
+    return deepSerialize(safeToObject(doc)) as Record<string, unknown>;
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'Get invoice by id' })
-  async get(@Param('id') id: string) {
+  async get(@Param('id') id: string): Promise<Record<string, unknown>> {
     const doc = await this.service.get(id);
-    return doc.toObject();
+    return deepSerialize(safeToObject(doc)) as Record<string, unknown>;
   }
 
   @Get()
@@ -105,7 +182,7 @@ export class InvoicesController {
   @ApiOkResponse({ description: 'Get normalized payload with sha256' })
   async normalized(@Param('id') id: string) {
     const inv = await this.service.get(id);
-    const obj = inv.toObject() as unknown as {
+    const obj = safeToObject(inv) as {
       _id: unknown;
       number?: string;
       status: 'DRAFT' | 'CONFIRMED';
@@ -117,8 +194,8 @@ export class InvoicesController {
       createdAt: Date;
       updatedAt: Date;
     };
-    const normalized = {
-      id: String(obj._id as any),
+    const normalized = deepSerialize({
+      id: String(obj._id),
       number: obj.number,
       status: obj.status,
       type: obj.type,
@@ -128,7 +205,7 @@ export class InvoicesController {
       equivalentCurrency: obj.equivalentCurrency,
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
-    };
+    }) as Record<string, unknown>;
     const json = JSON.stringify(normalized);
     const sha256 = createHash('sha256').update(json).digest('hex');
     return { normalized, sha256 };

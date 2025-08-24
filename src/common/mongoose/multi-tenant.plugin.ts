@@ -6,6 +6,7 @@ import type {
   HydratedDocument,
   CallbackWithoutResultAndOptionalError,
 } from 'mongoose';
+import { Types } from 'mongoose';
 import { requestContext } from '../logger/request-context';
 
 // Global plugin that injects tenantId into queries for schemas that have a tenantId path
@@ -62,14 +63,18 @@ export function MultiTenantPlugin(schema: Schema) {
           (stage as { $match: { tenantId?: unknown } }).$match.tenantId != null,
       );
       if (!hasMatch) {
-        this.pipeline().unshift({ $match: { tenantId } });
+        // Cast to ObjectId when possible to match schema field types in MongoDB aggregate
+        const tid = Types.ObjectId.isValid(tenantId)
+          ? new Types.ObjectId(tenantId)
+          : tenantId;
+        this.pipeline().unshift({ $match: { tenantId: tid } });
       }
     },
   );
 
-  // Save middleware: set tenantId if missing
+  // Validate middleware: set tenantId if missing BEFORE validation runs
   schema.pre(
-    'save',
+    'validate',
     { document: true, query: false },
     function (
       this: HydratedDocument<{ tenantId?: string }>,

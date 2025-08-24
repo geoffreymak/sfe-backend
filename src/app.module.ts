@@ -20,7 +20,10 @@ import { IntegrationsModule } from './integrations/integrations.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { ReportsModule } from './reports/reports.module';
 import { PdfModule } from './pdf/pdf.module';
+import { UsersModule } from './users/users.module';
 import { AuditModule } from './audit/audit.module';
+import { RbacModule } from './rbac/rbac.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -81,6 +84,9 @@ import { AuditModule } from './audit/audit.module';
     ReportsModule,
     PdfModule,
     AuditModule,
+    RbacModule,
+    ProfileModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

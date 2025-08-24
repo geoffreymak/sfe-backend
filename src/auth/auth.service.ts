@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,6 +16,7 @@ import {
   Membership,
   MembershipDocument,
 } from '../memberships/membership.schema';
+import { RbacService } from '../rbac/rbac.service';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,10 @@ export class AuthService {
     private readonly tenantModel: Model<TenantDocument>,
     @InjectModel(Membership.name)
     private readonly membershipModel: Model<MembershipDocument>,
+    private readonly rbacService: RbacService,
   ) {}
+
+  private readonly logger = new Logger(AuthService.name);
 
   private slugify(input: string): string {
     return input
@@ -36,7 +41,36 @@ export class AuthService {
       .replace(/(^-|-$)+/g, '');
   }
 
+  // Ensure collections and indexes exist before starting a transaction to avoid
+  // server errors about creating collections/indexes within a transaction.
+  private async ensureCollections() {
+    await Promise.all([
+      this.userModel.createCollection().catch(() => undefined),
+      this.tenantModel.createCollection().catch(() => undefined),
+      this.membershipModel.createCollection().catch(() => undefined),
+    ]);
+    // Also ensure indexes are built outside of any transaction.
+    await Promise.all([
+      this.userModel.syncIndexes().catch(() => undefined),
+      this.tenantModel.syncIndexes().catch(() => undefined),
+      this.membershipModel.syncIndexes().catch(() => undefined),
+    ]);
+  }
+
+  // Detect when the MongoDB deployment doesn't support transactions (standalone server)
+  private isTxnUnsupported(err: unknown): boolean {
+    const anyErr = err as { message?: string; errmsg?: string; code?: number };
+    const text =
+      `${anyErr?.message ?? ''} ${anyErr?.errmsg ?? ''}`.toLowerCase();
+    return text.includes(
+      'transaction numbers are only allowed on a replica set member or mongos',
+    );
+  }
+
   async register(dto: RegisterDto) {
+    // Warm up collections to avoid implicit collection creation inside a transaction
+    await this.ensureCollections();
+
     const existing = await this.userModel.findOne({ email: dto.email }).lean();
     if (existing) {
       throw new BadRequestException('Email already registered');
@@ -47,57 +81,156 @@ export class AuthService {
     });
 
     const session = await this.userModel.db.startSession();
-    session.startTransaction();
+    let useTx = false;
     try {
-      const user = await this.userModel.create(
-        [
-          {
-            email: dto.email,
-            passwordHash,
-          },
-        ],
-        { session },
-      );
-      const createdUser = user[0];
+      try {
+        session.startTransaction();
+        useTx = true;
+      } catch (txErr) {
+        // Fallback to non-transactional flow when deployment doesn't support transactions
+        this.logger.warn(
+          `Transactions unsupported; proceeding without transaction: ${
+            txErr instanceof Error ? txErr.message : String(txErr)
+          }`,
+        );
+      }
 
+      // First create the tenant (so we can set defaultTenantId on user creation)
       const orgName = dto.organizationName ?? dto.email.split('@')[0];
-      const tenantDocs = await this.tenantModel.create(
-        [
-          {
-            name: orgName,
-            slug: this.slugify(orgName),
-          },
-        ],
-        { session },
-      );
-      const tenant = tenantDocs[0];
 
-      // membership admin-org
-      await this.membershipModel.create(
-        [
-          {
-            userId: createdUser._id,
-            tenantId: tenant._id,
-            roles: ['admin-org'],
-          },
-        ],
-        { session },
-      );
+      try {
+        const tenantDocs = useTx
+          ? await this.tenantModel.create(
+              [
+                {
+                  name: orgName,
+                  slug: this.slugify(orgName),
+                },
+              ],
+              { session },
+            )
+          : await this.tenantModel.create([
+              {
+                name: orgName,
+                slug: this.slugify(orgName),
+              },
+            ]);
+        const tenant = tenantDocs[0];
 
-      // set default tenant
-      createdUser.defaultTenantId = tenant._id;
-      await createdUser.save({ session });
+        // Create the user with defaultTenantId set (required by schema)
+        const userDocs = useTx
+          ? await this.userModel.create(
+              [
+                {
+                  email: dto.email,
+                  passwordHash,
+                  defaultTenantId: tenant._id,
+                },
+              ],
+              { session },
+            )
+          : await this.userModel.create([
+              {
+                email: dto.email,
+                passwordHash,
+                defaultTenantId: tenant._id,
+              },
+            ]);
+        const createdUser = userDocs[0];
 
-      await session.commitTransaction();
+        // membership admin-org
+        if (useTx) {
+          await this.membershipModel.create(
+            [
+              {
+                userId: createdUser._id,
+                tenantId: tenant._id,
+                roles: ['OWNER'],
+              },
+            ],
+            { session },
+          );
+        } else {
+          await this.membershipModel.create([
+            {
+              userId: createdUser._id,
+              tenantId: tenant._id,
+              roles: ['OWNER'],
+            },
+          ]);
+        }
 
-      const accessToken = await this.jwt.signAsync({
-        sub: createdUser._id.toString(),
-        email: createdUser.email,
-      });
+        if (useTx) {
+          await session.commitTransaction();
+        }
 
-      return { accessToken, tenantId: tenant._id.toString() };
+        // Seed default roles outside the transaction to avoid implicit collection creation inside tx
+        await this.rbacService.seedTenantDefaults(tenant._id);
+
+        const accessToken = await this.jwt.signAsync({
+          sub: createdUser._id.toString(),
+          email: createdUser.email,
+        });
+
+        return { accessToken, tenantId: tenant._id.toString() };
+      } catch (e) {
+        // If the write failed because the deployment doesn't support transactions,
+        // retry the whole flow without using a transaction.
+        if (useTx && this.isTxnUnsupported(e)) {
+          this.logger.warn(
+            `Transactions unsupported during register; retrying without transaction: ${
+              e instanceof Error ? e.message : String(e)
+            }`,
+          );
+          try {
+            await session.abortTransaction();
+          } catch {
+            // ignore
+          }
+
+          const tenantDocs2 = await this.tenantModel.create([
+            { name: orgName, slug: this.slugify(orgName) },
+          ]);
+          const tenant2 = tenantDocs2[0];
+
+          const userDocs2 = await this.userModel.create([
+            {
+              email: dto.email,
+              passwordHash,
+              defaultTenantId: tenant2._id,
+            },
+          ]);
+          const createdUser2 = userDocs2[0];
+
+          await this.membershipModel.create([
+            {
+              userId: createdUser2._id,
+              tenantId: tenant2._id,
+              roles: ['OWNER'],
+            },
+          ]);
+
+          await this.rbacService.seedTenantDefaults(tenant2._id);
+
+          const accessToken2 = await this.jwt.signAsync({
+            sub: createdUser2._id.toString(),
+            email: createdUser2.email,
+          });
+          return {
+            accessToken: accessToken2,
+            tenantId: tenant2._id.toString(),
+          };
+        }
+        throw e;
+      }
     } catch (e) {
-      await session.abortTransaction();
+      if (useTx) {
+        try {
+          await session.abortTransaction();
+        } catch {
+          // ignore abort errors
+        }
+      }
       throw e;
     } finally {
       await session.endSession();
@@ -107,6 +240,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const user = await this.userModel.findOne({ email: dto.email });
     if (!user) throw new ForbiddenException('Invalid credentials');
+    if (!user.passwordHash) throw new ForbiddenException('Invalid credentials');
     const ok = await argon2verify(user.passwordHash, dto.password);
     if (!ok) throw new ForbiddenException('Invalid credentials');
 

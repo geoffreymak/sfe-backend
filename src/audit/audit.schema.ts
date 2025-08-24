@@ -36,15 +36,31 @@ export class AuditLog {
 export const AuditLogSchema = SchemaFactory.createForClass(AuditLog);
 
 // Append-only protection
-const appendOnlyError = function (
-  this: unknown,
-  next: (err?: unknown) => void,
-) {
+const appendOnlyError = function (this: any, next: (err?: any) => void) {
   next(new Error('AuditLog is append-only'));
 };
-AuditLogSchema.pre('updateOne', appendOnlyError);
-AuditLogSchema.pre('findOneAndUpdate', appendOnlyError);
-AuditLogSchema.pre('deleteOne', appendOnlyError);
-AuditLogSchema.pre('deleteMany', appendOnlyError);
-AuditLogSchema.pre('findOneAndDelete', appendOnlyError);
-AuditLogSchema.pre('findOneAndRemove', appendOnlyError);
+AuditLogSchema.pre(
+  'updateOne',
+  { query: true, document: false },
+  appendOnlyError,
+);
+AuditLogSchema.pre(
+  'findOneAndUpdate',
+  { query: true, document: false },
+  appendOnlyError,
+);
+AuditLogSchema.pre(
+  'deleteOne',
+  { query: true, document: false },
+  appendOnlyError,
+);
+AuditLogSchema.pre(
+  'deleteMany',
+  { query: true, document: false },
+  appendOnlyError,
+);
+AuditLogSchema.pre(
+  'findOneAndDelete',
+  { query: true, document: false },
+  appendOnlyError,
+);

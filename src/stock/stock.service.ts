@@ -147,9 +147,9 @@ export class StockService {
         });
       }
 
-      // Update stock qty and avg
-      stock.qty = Types.Decimal128.fromString((beforeQty + qtyNum).toString());
+      // Update avg first based on previous quantity, then qty to avoid double-counting
       this.updateAvg(stock, qtyNum, unitCostNum);
+      stock.qty = Types.Decimal128.fromString((beforeQty + qtyNum).toString());
       await stock.save();
 
       // Serial handling

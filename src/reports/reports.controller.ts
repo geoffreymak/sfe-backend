@@ -6,17 +6,40 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReportsService, JournalState } from './reports.service';
+import { ReportsService } from './reports.service';
+import type { JournalState } from './reports.service';
+import { IsDateString, IsIn, IsInt, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 class McfJournalQueryDto {
+  @IsOptional()
+  @IsIn(['pending', 'ack', 'rejected'])
   state?: JournalState;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   limit?: number;
 }
 
 class SalesSummaryQueryDto {
+  @IsOptional()
+  @IsDateString()
   from?: string; // ISO date
+
+  @IsOptional()
+  @IsDateString()
   to?: string; // ISO date
+
+  @IsOptional()
+  @IsIn(['day', 'month', 'type', 'group'])
   groupBy?: 'day' | 'month' | 'type' | 'group';
 }
 

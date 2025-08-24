@@ -229,7 +229,14 @@ export class Invoice {
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);
-InvoiceSchema.index({ tenantId: 1, number: 1 }, { unique: true, sparse: true });
+InvoiceSchema.index(
+  { tenantId: 1, number: 1 },
+  {
+    unique: true,
+    name: 'uniq_tenant_number_confirmed',
+    partialFilterExpression: { status: 'CONFIRMED', number: { $exists: true } },
+  },
+);
 
 // Simple counters for numbering
 @Schema({ collection: 'invoice_counters' })

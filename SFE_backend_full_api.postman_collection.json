@@ -1,0 +1,5098 @@
+{
+  "info": {
+    "_postman_id": "4825b8f0-6af2-4a48-9876-6f64fa2c088c",
+    "name": "SFE Backend — FULL API (NestJS + MongoDB + DGI)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection complète et commentée pour l'API SFE."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "",
+      "item": [
+        {
+          "name": "Auth Controller register",
+          "request": {
+            "name": "Auth Controller register",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "header": [
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"organizationName\": \"ACME SARL\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"consequat Ut esse occaecat\",\n  \"password\": \"id consequat non laboris elit\",\n  \"organizationName\": \"la\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201', ()=>pm.expect([200,201]).to.include(pm.response.code));",
+                  "const d = pm.response.json();",
+                  "if (d?.accessToken) pm.collectionVariables.set('token', d.accessToken);",
+                  "if (d?.tenantId) pm.collectionVariables.set('tenantId', d.tenantId);",
+                  "if (d?.userId) pm.collectionVariables.set('userId', d.userId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Controller login",
+          "request": {
+            "name": "Auth Controller login",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "header": [
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"magna\",\n  \"password\": \"in quisaliqua nisi\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', ()=>pm.response.to.have.status(200));",
+                  "const d = pm.response.json();",
+                  "if (d?.accessToken) pm.collectionVariables.set('token', d.accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Controller me",
+          "request": {
+            "name": "Auth Controller me",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Health",
+      "description": "",
+      "item": [
+        {
+          "name": "Health Controller get Health",
+          "request": {
+            "name": "Health Controller get Health",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "header": [
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Settings",
+      "description": "",
+      "item": [
+        {
+          "name": "Settings Controller get",
+          "request": {
+            "name": "Settings Controller get",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "settings"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "settings"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Settings Controller put",
+          "request": {
+            "name": "Settings Controller put",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "settings"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": {\n    \"base\": \"CDF\",\n    \"defaultAlt\": \"USD\",\n    \"allowed\": [\n      \"USD\"\n    ],\n    \"decimals\": 2,\n    \"rounding\": \"HALF_UP\"\n  },\n  \"invoice\": {\n    \"defaultModePrix\": \"TTC\",\n    \"numbering\": {\n      \"prefix\": \"FV\",\n      \"yearlyReset\": true,\n      \"width\": 6\n    },\n    \"idempotencyTTLHours\": 24\n  },\n  \"loyalty\": {\n    \"enabled\": false,\n    \"earn\": {\n      \"base\": \"TTC\",\n      \"rate\": 1,\n      \"baseUnit\": 1000,\n      \"excludeTaxGroups\": [\n        \"L\",\n        \"N\"\n      ]\n    },\n    \"redeem\": {\n      \"pointValueCDF\": 10\n    }\n  },\n  \"stock\": {\n    \"costingMethod\": \"AVG\",\n    \"allowNegativeStock\": false,\n    \"reservationsEnabled\": false\n  },\n  \"integration\": {\n    \"mode\": \"mock\",\n    \"safety\": {\n      \"subtotalCheck\": true,\n      \"confirmDeadlineSec\": 120,\n      \"pendingMax\": 10\n    }\n  }\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "settings"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currency\": {\n    \"base\": \"CDF\",\n    \"defaultAlt\": \"USD\",\n    \"decimals\": 2,\n    \"rounding\": \"HALF_UP\"\n  },\n  \"invoice\": {\n    \"defaultModePrix\": \"TTC\",\n    \"numbering\": {\n      \"prefix\": \"FV\",\n      \"yearlyReset\": true,\n      \"width\": 6\n    },\n    \"idempotencyTTLHours\": 24\n  },\n  \"loyalty\": {\n    \"enabled\": false,\n    \"earn\": {\n      \"base\": \"TTC\",\n      \"rate\": 1,\n      \"baseUnit\": 1000,\n      \"excludeTaxGroups\": [\n        \"L\",\n        \"N\"\n      ]\n    },\n    \"redeem\": {\n      \"pointValueCDF\": 10\n    }\n  },\n  \"stock\": {\n    \"costingMethod\": \"AVG\",\n    \"allowNegativeStock\": false,\n    \"reservationsEnabled\": false\n  },\n  \"integration\": {\n    \"mode\": \"mock\",\n    \"safety\": {\n      \"subtotalCheck\": true,\n      \"confirmDeadlineSec\": 120,\n      \"pendingMax\": 10\n    },\n    \"emcf\": {\n      \"baseUrlInfo\": \"aliquip aute laboris\",\n      \"baseUrlInvoice\": \"quis mollit fugiat\",\n      \"token\": \"tempor\",\n      \"isf\": \"magna velit dolor anim ex\",\n      \"nif\": \"enim officia\"\n    },\n    \"mcf\": {\n      \"port\": -98461161.4971016,\n      \"baud\": 84481887.63856134,\n      \"dataBits\": -66384473.50090417,\n      \"parity\": \"officia adipisicing\",\n      \"stopBits\": 25121494.22693497,\n      \"isf\": \"sint qui laboris\",\n      \"nif\": \"proident\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Settings Controller get Public",
+          "request": {
+            "name": "Settings Controller get Public",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/settings/public",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "settings",
+                "public"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/settings/public",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "settings",
+                    "public"
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "x-tenant-id",
+                    "value": "officia laborum"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Currencies",
+      "description": "",
+      "item": [
+        {
+          "name": "Currencies Controller list",
+          "request": {
+            "name": "Currencies Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/currencies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "currencies"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/currencies",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "currencies"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Currencies Controller create",
+          "request": {
+            "name": "Currencies Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/currencies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "currencies"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"EUR\",\n  \"name\": \"Euro\",\n  \"symbol\": \"€\",\n  \"enabled\": false\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/currencies",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "currencies"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"EUR\",\n  \"name\": \"Euro\",\n  \"symbol\": \"€\",\n  \"enabled\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Currencies Controller update",
+          "request": {
+            "name": "Currencies Controller update",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/currencies/:code",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "currencies",
+                ":code"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Euro\",\n  \"symbol\": \"€\",\n  \"enabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/currencies/:code",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "currencies",
+                    ":code"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Euro\",\n  \"symbol\": \"€\",\n  \"enabled\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Currencies Controller remove",
+          "request": {
+            "name": "Currencies Controller remove",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/currencies/:code",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "currencies",
+                ":code"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/currencies/:code",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "currencies",
+                    ":code"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "FX",
+      "description": "",
+      "item": [
+        {
+          "name": "Fx Controller create",
+          "request": {
+            "name": "Fx Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/fx-rates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fx-rates"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"base\": \"CDF\",\n  \"quote\": \"USD\",\n  \"rate\": \"2750.50\",\n  \"validFrom\": \"{{fxValidFrom}}\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/fx-rates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fx-rates"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"base\": \"CDF\",\n  \"quote\": \"USD\",\n  \"rate\": \"2750.50\",\n  \"validFrom\": \"2025-08-24T17:57:26.444Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Fx Controller list",
+          "request": {
+            "name": "Fx Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/fx-rates?quote=officia%20laborum",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fx-rates"
+              ],
+              "query": [
+                {
+                  "key": "quote",
+                  "value": "officia laborum"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/fx-rates?quote=officia%20laborum",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fx-rates"
+                  ],
+                  "query": [
+                    {
+                      "key": "quote",
+                      "value": "officia laborum"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Fx Controller latest",
+          "request": {
+            "name": "Fx Controller latest",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/fx-rates/latest?quote=officia%20laborum",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fx-rates",
+                "latest"
+              ],
+              "query": [
+                {
+                  "key": "quote",
+                  "value": "officia laborum"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/fx-rates/latest?quote=officia%20laborum",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fx-rates",
+                    "latest"
+                  ],
+                  "query": [
+                    {
+                      "key": "quote",
+                      "value": "officia laborum"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Clients",
+      "description": "",
+      "item": [
+        {
+          "name": "Clients Controller list",
+          "request": {
+            "name": "Clients Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/clients?q=ACME&type=PM&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "ACME"
+                },
+                {
+                  "key": "type",
+                  "value": "PM"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List clients with pagination",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients?q=ACME&type=PM&page=1&limit=20",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "ACME"
+                    },
+                    {
+                      "key": "type",
+                      "value": "PM"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Clients Controller create",
+          "request": {
+            "name": "Clients Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"PM\",\n  \"denomination\": \"ACME SARL\",\n  \"nif\": \"A1234567C\",\n  \"email\": \"client@example.com\",\n  \"phone\": \"+243811234567\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Client created",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"PP\",\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            },
+            {
+              "name": "Validation failed for type-specific requirements",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"PP\",\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Clients Controller get",
+          "request": {
+            "name": "Clients Controller get",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients",
+                ":id"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Client detail",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Clients Controller update",
+          "request": {
+            "name": "Clients Controller update",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients",
+                ":id"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"PC\",\n  \"displayName\": \"ACME SARL\",\n  \"denomination\": \"ACME SARL\",\n  \"name\": \"Jean Kabila\",\n  \"nif\": \"A1234567C\",\n  \"refExo\": \"EXO-12345\",\n  \"email\": \"client@example.com\",\n  \"phone\": \"+243811234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "Client updated",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"PC\",\n  \"displayName\": \"ACME SARL\",\n  \"denomination\": \"ACME SARL\",\n  \"name\": \"Jean Kabila\",\n  \"nif\": \"A1234567C\",\n  \"refExo\": \"EXO-12345\",\n  \"email\": \"client@example.com\",\n  \"phone\": \"+243811234567\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            },
+            {
+              "name": "Validation failed for type-specific requirements",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"type\": \"PC\",\n  \"displayName\": \"ACME SARL\",\n  \"denomination\": \"ACME SARL\",\n  \"name\": \"Jean Kabila\",\n  \"nif\": \"A1234567C\",\n  \"refExo\": \"EXO-12345\",\n  \"email\": \"client@example.com\",\n  \"phone\": \"+243811234567\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Clients Controller remove",
+          "request": {
+            "name": "Clients Controller remove",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients",
+                ":id"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "name": "Client deleted",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Loyalty",
+      "description": "",
+      "item": [
+        {
+          "name": "Loyalty Controller enroll",
+          "request": {
+            "name": "Loyalty Controller enroll",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/loyalty/enroll",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loyalty",
+                "enroll"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"{{clientId}}\",\n  \"cardId\": \"CARD-0001\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/loyalty/enroll",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "loyalty",
+                    "enroll"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clientId\": \"64f0c0c0c0c0c0c0c0c0c0c0\",\n  \"cardId\": \"CARD-0001\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Loyalty Controller redeem",
+          "request": {
+            "name": "Loyalty Controller redeem",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/loyalty/redeem",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loyalty",
+                "redeem"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"{{clientId}}\",\n  \"points\": 100,\n  \"reason\": \"Reward redemption\",\n  \"idempotencyKey\": \"redeem-{{$timestamp}}\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/loyalty/redeem",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "loyalty",
+                    "redeem"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clientId\": \"64f0c0c0c0c0c0c0c0c0c0c0\",\n  \"points\": 100,\n  \"reason\": \"Reward redemption\",\n  \"idempotencyKey\": \"redeem-INV-2025-000123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Loyalty Controller list",
+          "request": {
+            "name": "Loyalty Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/loyalty/transactions?clientId=64f0c0c0c0c0c0c0c0c0c0c0&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loyalty",
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "64f0c0c0c0c0c0c0c0c0c0c0"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List loyalty transactions for a client",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/loyalty/transactions?clientId=64f0c0c0c0c0c0c0c0c0c0c0&page=1&limit=20",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "loyalty",
+                    "transactions"
+                  ],
+                  "query": [
+                    {
+                      "key": "clientId",
+                      "value": "64f0c0c0c0c0c0c0c0c0c0c0"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Items",
+      "description": "",
+      "item": [
+        {
+          "name": "Items Controller list",
+          "request": {
+            "name": "Items Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/items?q=STYLO&type=SER&taxGroup=I&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "items"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "STYLO"
+                },
+                {
+                  "key": "type",
+                  "value": "SER"
+                },
+                {
+                  "key": "taxGroup",
+                  "value": "I"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List items with pagination and search",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items?q=STYLO&type=SER&taxGroup=I&page=1&limit=20",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "STYLO"
+                    },
+                    {
+                      "key": "type",
+                      "value": "SER"
+                    },
+                    {
+                      "key": "taxGroup",
+                      "value": "I"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Items Controller create",
+          "request": {
+            "name": "Items Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "items"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"barcode\": \"1234567890123\",\n  \"taxGroupDefault\": \"B\",\n  \"priceTTC\": \"1160.00\",\n  \"stockTracking\": \"none\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Item created",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"taxGroupDefault\": \"B\",\n  \"priceHT\": \"1000.00\",\n  \"stockTracking\": \"simple\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            },
+            {
+              "name": "Validation failed: price XOR or TAX group constraint",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"taxGroupDefault\": \"B\",\n  \"priceHT\": \"1000.00\",\n  \"stockTracking\": \"simple\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Items Controller get",
+          "request": {
+            "name": "Items Controller get",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/items/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "items",
+                ":id"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Item detail",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Items Controller update",
+          "request": {
+            "name": "Items Controller update",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/items/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "items",
+                ":id"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"barcode\": \"1234567890123\",\n  \"taxGroupDefault\": \"O\",\n  \"priceHT\": \"1000.00\",\n  \"priceTTC\": \"1160.00\",\n  \"stockTracking\": \"lot\",\n  \"reorderPoint\": \"10\",\n  \"minStock\": \"0\",\n  \"maxStock\": \"100\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "Item updated",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"barcode\": \"1234567890123\",\n  \"taxGroupDefault\": \"O\",\n  \"priceHT\": \"1000.00\",\n  \"priceTTC\": \"1160.00\",\n  \"stockTracking\": \"lot\",\n  \"reorderPoint\": \"10\",\n  \"minStock\": \"0\",\n  \"maxStock\": \"100\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            },
+            {
+              "name": "Validation failed: price XOR or TAX group constraint",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"SKU-001\",\n  \"name\": \"Stylo bille bleu\",\n  \"type\": \"BIE\",\n  \"unit\": \"pcs\",\n  \"barcode\": \"1234567890123\",\n  \"taxGroupDefault\": \"O\",\n  \"priceHT\": \"1000.00\",\n  \"priceTTC\": \"1160.00\",\n  \"stockTracking\": \"lot\",\n  \"reorderPoint\": \"10\",\n  \"minStock\": \"0\",\n  \"maxStock\": \"100\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Items Controller remove",
+          "request": {
+            "name": "Items Controller remove",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/items/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "items",
+                ":id"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "name": "Item deleted",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/items/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "items",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Warehouses",
+      "description": "",
+      "item": [
+        {
+          "name": "Warehouses Controller list",
+          "request": {
+            "name": "Warehouses Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/warehouses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List warehouses",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/warehouses",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "warehouses"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Warehouses Controller create",
+          "request": {
+            "name": "Warehouses Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/warehouses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"WH-001\",\n  \"name\": \"Entrepôt principal\",\n  \"address\": \"Av. 30 Juin, Kinshasa\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Warehouse created",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/warehouses",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "warehouses"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"WH-001\",\n  \"name\": \"Entrepôt principal\",\n  \"address\": \"Av. 30 Juin, Kinshasa\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Warehouses Controller get",
+          "request": {
+            "name": "Warehouses Controller get",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                ":id"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Warehouse detail",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/warehouses/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "warehouses",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Warehouses Controller update",
+          "request": {
+            "name": "Warehouses Controller update",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                ":id"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"WH-001\",\n  \"name\": \"Entrepôt principal\",\n  \"address\": \"Av. 30 Juin, Kinshasa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "Warehouse updated",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/warehouses/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "warehouses",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"WH-001\",\n  \"name\": \"Entrepôt principal\",\n  \"address\": \"Av. 30 Juin, Kinshasa\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Warehouses Controller remove",
+          "request": {
+            "name": "Warehouses Controller remove",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/warehouses/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "warehouses",
+                ":id"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "name": "Warehouse deleted",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/warehouses/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "warehouses",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Stock",
+      "description": "",
+      "item": [
+        {
+          "name": "Stock Controller receipts",
+          "request": {
+            "name": "Stock Controller receipts",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/stock/receipts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stock",
+                "receipts"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"warehouseId\": \"{{warehouseId}}\",\n  \"lines\": [\n    {\n      \"itemId\": \"{{itemId}}\",\n      \"qty\": \"10.0\",\n      \"unitCost\": \"100.00\"\n    }\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Stock receipt processed",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/stock/receipts",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stock",
+                    "receipts"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"warehouseId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n  \"lines\": [\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qty\": \"10.0\",\n      \"unitCost\": \"100.00\",\n      \"lot\": \"LOT-2025-08\",\n      \"serials\": [\n        \"enim nisi ea\",\n        \"cillum Ut aliqua\"\n      ]\n    },\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qty\": \"10.0\",\n      \"unitCost\": \"100.00\",\n      \"lot\": \"LOT-2025-08\",\n      \"serials\": [\n        \"in aliquip\",\n        \"dolor enim aute consequat\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Stock Controller transfers",
+          "request": {
+            "name": "Stock Controller transfers",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/stock/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stock",
+                "transfers"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWarehouseId\": \"{{warehouseId}}\",\n  \"toWarehouseId\": \"{{warehouseId}}\",\n  \"lines\": [\n    {\n      \"itemId\": \"{{itemId}}\",\n      \"qty\": \"5.0\"\n    }\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Stock transfer processed",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/stock/transfers",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stock",
+                    "transfers"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fromWarehouseId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n  \"toWarehouseId\": \"64f0c1b2b3c4d5e6f7a8b9c1\",\n  \"lines\": [\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qty\": \"5.0\",\n      \"lot\": \"ullamco Ut do\"\n    },\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qty\": \"5.0\",\n      \"lot\": \"tempor nisi\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Stock Controller adjustments",
+          "request": {
+            "name": "Stock Controller adjustments",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/stock/adjustments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stock",
+                "adjustments"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"warehouseId\": \"{{warehouseId}}\",\n  \"lines\": [\n    {\n      \"itemId\": \"{{itemId}}\",\n      \"qtyDelta\": \"-2.0\",\n      \"reason\": \"stock count correction\"\n    }\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Stock adjustment processed",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/stock/adjustments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stock",
+                    "adjustments"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"warehouseId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n  \"lines\": [\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qtyDelta\": \"-2.0\",\n      \"reason\": \"stock count correction\",\n      \"lot\": \"officia\"\n    },\n    {\n      \"itemId\": \"64f0c1b2b3c4d5e6f7a8b9c0\",\n      \"qtyDelta\": \"-2.0\",\n      \"reason\": \"stock count correction\",\n      \"lot\": \"do sunt dolore\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Stock Controller alerts",
+          "request": {
+            "name": "Stock Controller alerts",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/stock/alerts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stock",
+                "alerts"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Low stock alerts",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/stock/alerts",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "stock",
+                    "alerts"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Invoices",
+      "description": "",
+      "item": [
+        {
+          "name": "Create invoice draft and compute totals",
+          "request": {
+            "name": "Create invoice draft and compute totals",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/draft",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                "draft"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modePrix\": \"TTC\",\n  \"type\": \"FV\",\n  \"client\": {\n    \"type\": \"PM\",\n    \"denomination\": \"ACME SARL\",\n    \"nif\": \"A1234567C\"\n  },\n  \"lines\": [\n    {\n      \"kind\": \"BIE\",\n      \"group\": \"B\",\n      \"label\": \"Stylo bille bleu\",\n      \"qty\": \"1.000\",\n      \"unitPrice\": \"1160.00\"\n    },\n    {\n      \"kind\": \"TAX\",\n      \"group\": \"L\",\n      \"label\": \"Taxe parafiscale\",\n      \"qty\": \"1.000\",\n      \"unitPrice\": \"100.00\"\n    }\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "Draft created",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    "draft"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modePrix\": \"HT\",\n  \"type\": \"EV\",\n  \"client\": {\n    \"type\": \"PP\",\n    \"denomination\": \"proident tempor\",\n    \"name\": \"ut consequat officia eiusmod in\",\n    \"nif\": \"voluptate officia\",\n    \"refExo\": \"anim\"\n  },\n  \"lines\": [\n    {\n      \"kind\": \"SER\",\n      \"group\": \"B\",\n      \"qty\": \"minim fugiat Lorem adipisicing ut\",\n      \"unitPrice\": \"exercitation aute Duis\",\n      \"itemId\": \"cupidatat enim Lorem non velit\",\n      \"label\": \"laborum ea voluptate ad aliquip\"\n    },\n    {\n      \"kind\": \"TAX\",\n      \"group\": \"K\",\n      \"qty\": \"veniam mollit ut exercitation\",\n      \"unitPrice\": \"n\",\n      \"itemId\": \"dolor velit ullamco cupidatat\",\n      \"label\": \"est Excepteur\"\n    }\n  ],\n  \"avoir\": {\n    \"nature\": \"COR\",\n    \"originInvoiceRef\": \"proident in\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            },
+            {
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/draft",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    "draft"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modePrix\": \"HT\",\n  \"type\": \"EV\",\n  \"client\": {\n    \"type\": \"PP\",\n    \"denomination\": \"proident tempor\",\n    \"name\": \"ut consequat officia eiusmod in\",\n    \"nif\": \"voluptate officia\",\n    \"refExo\": \"anim\"\n  },\n  \"lines\": [\n    {\n      \"kind\": \"SER\",\n      \"group\": \"B\",\n      \"qty\": \"minim fugiat Lorem adipisicing ut\",\n      \"unitPrice\": \"exercitation aute Duis\",\n      \"itemId\": \"cupidatat enim Lorem non velit\",\n      \"label\": \"laborum ea voluptate ad aliquip\"\n    },\n    {\n      \"kind\": \"TAX\",\n      \"group\": \"K\",\n      \"qty\": \"veniam mollit ut exercitation\",\n      \"unitPrice\": \"n\",\n      \"itemId\": \"dolor velit ullamco cupidatat\",\n      \"label\": \"est Excepteur\"\n    }\n  ],\n  \"avoir\": {\n    \"nature\": \"COR\",\n    \"originInvoiceRef\": \"proident in\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Confirm draft invoice with DGI checks",
+          "request": {
+            "name": "Confirm draft invoice with DGI checks",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "confirm"
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "",
+                "key": "X-Idempotency-Key",
+                "value": "officia laborum"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"equivalentCurrency\": {\n    \"code\": \"USD\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "Invoice confirmed (idempotent)",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/:id/confirm",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "confirm"
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "",
+                    "key": "X-Idempotency-Key",
+                    "value": "officia laborum"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"equivalentCurrency\": {\n    \"code\": \"USD\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Invoices Controller get",
+          "request": {
+            "name": "Invoices Controller get",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Get invoice by id",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Invoices Controller list",
+          "request": {
+            "name": "Invoices Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices?page=officia%20laborum&limit=officia%20laborum",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "limit",
+                  "value": "officia laborum"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List invoices",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices?page=officia%20laborum&limit=officia%20laborum",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "officia laborum"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Invoices Controller normalized",
+          "request": {
+            "name": "Invoices Controller normalized",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/normalized",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "normalized"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Get normalized payload with sha256",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/:id/normalized",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "normalized"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Generate invoice PDF",
+          "request": {
+            "name": "Generate invoice PDF",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "pdf"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "PDF binary",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/:id/pdf",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "pdf"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Orchestrator Controller normalize",
+          "request": {
+            "name": "Orchestrator Controller normalize",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/normalize",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "normalize"
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "",
+                "key": "X-Idempotency-Key",
+                "value": "officia laborum"
+              }
+            ],
+            "method": "POST"
+          },
+          "response": [
+            {
+              "name": "Normalize invoice by integration mode and return result",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/:id/normalize",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "normalize"
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "",
+                    "key": "X-Idempotency-Key",
+                    "value": "officia laborum"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Integrations",
+      "description": "",
+      "item": [
+        {
+          "name": "Integrations Controller status",
+          "request": {
+            "name": "Integrations Controller status",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/integrations/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "integrations",
+                "status"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Integration status summary by current mode",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/integrations/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "integrations",
+                    "status"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Reports",
+      "description": "",
+      "item": [
+        {
+          "name": "MCF/e-MCF dispatch journal",
+          "request": {
+            "name": "MCF/e-MCF dispatch journal",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/reports/mcf-journal?limit=34048722.50007562&page=34048722.50007562&state=ack",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "mcf-journal"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "34048722.50007562"
+                },
+                {
+                  "key": "page",
+                  "value": "34048722.50007562"
+                },
+                {
+                  "key": "state",
+                  "value": "ack"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Journal page",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/reports/mcf-journal?limit=34048722.50007562&page=34048722.50007562&state=ack",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "mcf-journal"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "34048722.50007562"
+                    },
+                    {
+                      "key": "page",
+                      "value": "34048722.50007562"
+                    },
+                    {
+                      "key": "state",
+                      "value": "ack"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"limit\": 50,\n  \"total\": 1,\n  \"items\": [\n    {\n      \"number\": \"FV/2025/000001\",\n      \"status\": \"CONFIRMED\",\n      \"type\": \"FC\",\n      \"securitySource\": \"emcf\",\n      \"state\": \"ack\",\n      \"attempts\": 2,\n      \"lastError\": null,\n      \"createdAt\": \"2025-01-20T10:00:00.000Z\",\n      \"updatedAt\": \"2025-01-20T10:05:12.000Z\"\n    }\n  ]\n}",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Sales summary (confirmed invoices)",
+          "request": {
+            "name": "Sales summary (confirmed invoices)",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/reports/sales-summary?groupBy=group&to=officia%20laborum&from=officia%20laborum",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "sales-summary"
+              ],
+              "query": [
+                {
+                  "key": "groupBy",
+                  "value": "group"
+                },
+                {
+                  "key": "to",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "from",
+                  "value": "officia laborum"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "Summary totals and top lists",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/reports/sales-summary?groupBy=group&to=officia%20laborum&from=officia%20laborum",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "sales-summary"
+                  ],
+                  "query": [
+                    {
+                      "key": "groupBy",
+                      "value": "group"
+                    },
+                    {
+                      "key": "to",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "from",
+                      "value": "officia laborum"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"summary\": [\n    {\n      \"key\": \"2025-01-20\",\n      \"totalTTC\": \"120000.00\",\n      \"count\": 3\n    },\n    {\n      \"key\": \"2025-01-21\",\n      \"totalTTC\": \"80000.00\",\n      \"count\": 2\n    }\n  ],\n  \"totals\": {\n    \"totalTTC\": \"200000.00\",\n    \"count\": 5\n  },\n  \"topItems\": [\n    {\n      \"label\": \"Biscuit 50g\",\n      \"totalTTC\": \"70000.00\"\n    },\n    {\n      \"label\": \"Coca 50cl\",\n      \"totalTTC\": \"50000.00\"\n    }\n  ],\n  \"topClients\": [\n    {\n      \"name\": \"ACME SA\",\n      \"nif\": \"A1234567\",\n      \"totalTTC\": \"150000.00\"\n    },\n    {\n      \"name\": \"John Doe\",\n      \"nif\": null,\n      \"totalTTC\": \"50000.00\"\n    }\n  ]\n}",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Audit",
+      "description": "",
+      "item": [
+        {
+          "name": "Audit Controller list",
+          "request": {
+            "name": "Audit Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/audit?actorId=officia%20laborum&action=officia%20laborum&resource=officia%20laborum&resourceId=officia%20laborum&from=officia%20laborum&to=officia%20laborum&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audit"
+              ],
+              "query": [
+                {
+                  "key": "actorId",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "action",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "resource",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "resourceId",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "from",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "to",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "name": "List audit logs with filters",
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/audit?actorId=officia%20laborum&action=officia%20laborum&resource=officia%20laborum&resourceId=officia%20laborum&from=officia%20laborum&to=officia%20laborum&page=1&limit=20",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "audit"
+                  ],
+                  "query": [
+                    {
+                      "key": "actorId",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "action",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "resourceId",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "from",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "to",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "RBAC",
+      "description": "",
+      "item": [
+        {
+          "name": "Rbac Controller list Permissions",
+          "request": {
+            "name": "Rbac Controller list Permissions",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/permissions/catalog",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "permissions",
+                "catalog"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/permissions/catalog",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "permissions",
+                    "catalog"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller list Roles",
+          "request": {
+            "name": "Rbac Controller list Roles",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller create Role",
+          "request": {
+            "name": "Rbac Controller create Role",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"MANAGER\",\n  \"name\": \"manager\",\n  \"description\": \"Can manage core resources\",\n  \"permissions\": [\n    \"items:read\",\n    \"invoices:create\"\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key\": \"MANAGER\",\n  \"name\": \"manager\",\n  \"permissions\": [\n    \"items:read\",\n    \"invoices:create\"\n  ],\n  \"description\": \"Can manage core resources\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller update Role",
+          "request": {
+            "name": "Rbac Controller update Role",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "roles",
+                ":id"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"sunt con\",\n  \"description\": \"cillum\",\n  \"permissions\": [\n    \"consequat \",\n    \"dolor\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/roles/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "roles",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"cupidatat amet\",\n  \"description\": \"aute veniam culpa minim nostrud\",\n  \"permissions\": [\n    \"cupidatat dolore tempor\",\n    \"officia enim in\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller delete Role",
+          "request": {
+            "name": "Rbac Controller delete Role",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "roles",
+                ":id"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/roles/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "roles",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller get Membership By Path",
+          "request": {
+            "name": "Rbac Controller get Membership By Path",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/users/:userId/memberships/:tenantId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "users",
+                ":userId",
+                "memberships",
+                ":tenantId"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/users/:userId/memberships/:tenantId",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "users",
+                    ":userId",
+                    "memberships",
+                    ":tenantId"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller set Membership Roles By Path",
+          "request": {
+            "name": "Rbac Controller set Membership Roles By Path",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/users/:userId/memberships/:tenantId/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "users",
+                ":userId",
+                "memberships",
+                ":tenantId",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/users/:userId/memberships/:tenantId/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "users",
+                    ":userId",
+                    "memberships",
+                    ":tenantId",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller my Roles",
+          "request": {
+            "name": "Rbac Controller my Roles",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/me/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "me",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/me/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "me",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller my Permissions",
+          "request": {
+            "name": "Rbac Controller my Permissions",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/me/permissions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "me",
+                "permissions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/me/permissions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "me",
+                    "permissions"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Rbac Controller seed Defaults",
+          "request": {
+            "name": "Rbac Controller seed Defaults",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/rbac/roles/seed-defaults",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "roles",
+                "seed-defaults"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "POST"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/rbac/roles/seed-defaults",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rbac",
+                    "roles",
+                    "seed-defaults"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Profile",
+      "description": "",
+      "item": [
+        {
+          "name": "Profile Controller get Profile",
+          "request": {
+            "name": "Profile Controller get Profile",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/me/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "profile"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Profile Controller update Profile",
+          "request": {
+            "name": "Profile Controller update Profile",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"John Doe\",\n  \"phone\": \"+243820000000\",\n  \"avatarUrl\": \"https://example.com/avatar-john.png\",\n  \"locale\": \"fr-CD\",\n  \"timezone\": \"Africa/Kinshasa\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/me/profile",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "profile"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"displayName\": \"consectetur aute laboris culpa\",\n  \"phone\": \"consequat nostrud aliquip Ut\",\n  \"avatarUrl\": \"http://kmUZsN.jpjkm03fpEK72Wcz.ayOg,\",\n  \"locale\": \"non \",\n  \"timezone\": \"amet \"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Profile Controller change Password",
+          "request": {
+            "name": "Profile Controller change Password",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/me/password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "password"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"{{tempPassword}}\"\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/me/password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "password"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currentPassword\": \"tempor anim\",\n  \"newPassword\": \"ci\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Profile Controller my Roles",
+          "request": {
+            "name": "Profile Controller my Roles",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/me/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/me/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Profile Controller my Permissions",
+          "request": {
+            "name": "Profile Controller my Permissions",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/me/permissions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "permissions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/me/permissions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "me",
+                    "permissions"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "Users (Admin)",
+      "description": "",
+      "item": [
+        {
+          "name": "Users Controller list",
+          "request": {
+            "name": "Users Controller list",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users?q=officia%20laborum&status=officia%20laborum&limit=34048722.50007562&offset=34048722.50007562",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "status",
+                  "value": "officia laborum"
+                },
+                {
+                  "key": "limit",
+                  "value": "34048722.50007562"
+                },
+                {
+                  "key": "offset",
+                  "value": "34048722.50007562"
+                }
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users?q=officia%20laborum&status=officia%20laborum&limit=34048722.50007562&offset=34048722.50007562",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "status",
+                      "value": "officia laborum"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "34048722.50007562"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "34048722.50007562"
+                    }
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller create",
+          "request": {
+            "name": "Users Controller create",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email_new_user}}\",\n  \"displayName\": \"Jane Admin\",\n  \"phone\": \"+243810000000\",\n  \"avatarUrl\": \"https://example.com/avatar.png\",\n  \"locale\": \"fr-CD\",\n  \"timezone\": \"Africa/Kinshasa\",\n  \"password\": \"{{tempPassword}}\",\n  \"defaultTenantId\": \"{{tenantId}}\",\n  \"roles\": [\n    \"ADMIN\",\n    \"USERS:READ\",\n    \"USERS:WRITE\"\n  ]\n}"
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                },
+                "header": [],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller get One",
+          "request": {
+            "name": "Users Controller get One",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller update",
+          "request": {
+            "name": "Users Controller update",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller soft Delete",
+          "request": {
+            "name": "Users Controller soft Delete",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ]
+            },
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ]
+                },
+                "header": [],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller set Status",
+          "request": {
+            "name": "Users Controller set Status",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "status"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id/status",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id",
+                    "status"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller get Roles",
+          "request": {
+            "name": "Users Controller get Roles",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "roles"
+              ]
+            },
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller set Roles",
+          "request": {
+            "name": "Users Controller set Roles",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id",
+                    "roles"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        },
+        {
+          "name": "Users Controller set Default Tenant",
+          "request": {
+            "name": "Users Controller set Default Tenant",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/default-tenant",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "default-tenant"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id/default-tenant",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id",
+                    "default-tenant"
+                  ]
+                },
+                "header": [],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    },
+    {
+      "name": "App",
+      "description": "",
+      "item": [
+        {
+          "name": "App Controller get Hello",
+          "request": {
+            "name": "App Controller get Hello",
+            "description": "",
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "header": [
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenantId}}"
+              },
+              {
+                "key": "X-Request-Id",
+                "value": "{{$guid}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "originalRequest": {
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    ""
+                  ]
+                },
+                "header": [],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": []
+            }
+          ],
+          "event": []
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": []
+}

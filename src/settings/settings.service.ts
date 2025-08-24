@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import type { UpdateQuery } from 'mongoose';
 import {
   Settings,
   SettingsDocument,
@@ -71,14 +72,15 @@ export class SettingsService {
 
   async ensure(tenantId: string): Promise<SettingsDocument> {
     const tid = new Types.ObjectId(tenantId);
-    let doc = await this.settingsModel.findOne({ tenantId: tid }).exec();
-    if (!doc) {
-      doc = await this.settingsModel.create({
-        tenantId: tid,
-        ...defaultSettings(),
-      });
-    }
-    return doc;
+    // Atomic upsert to prevent duplicate key on concurrent calls
+    const doc = await this.settingsModel
+      .findOneAndUpdate(
+        { tenantId: tid },
+        { $setOnInsert: { tenantId: tid, ...defaultSettings() } },
+        { new: true, upsert: true },
+      )
+      .exec();
+    return doc as SettingsDocument;
   }
 
   async get(tenantId: string): Promise<SettingsDocument> {
@@ -119,32 +121,44 @@ export class SettingsService {
     tenantId: string,
     dto: UpdateSettingsDto,
   ): Promise<SettingsDocument> {
-    // Enforce invariants
-    if (dto.currency.base !== 'CDF') {
-      throw new BadRequestException('currency.base is locked to CDF');
-    }
-    if (dto.currency.defaultAlt !== 'USD') {
-      throw new BadRequestException('currency.defaultAlt is locked to USD');
+    // Enforce invariants only if currency is being updated (partial updates allowed)
+    if (dto.currency) {
+      if (dto.currency.base !== 'CDF') {
+        throw new BadRequestException('currency.base is locked to CDF');
+      }
+      if (dto.currency.defaultAlt !== 'USD') {
+        throw new BadRequestException('currency.defaultAlt is locked to USD');
+      }
     }
 
     const tid = new Types.ObjectId(tenantId);
-    await this.ensure(tenantId);
+    // Ensure document exists and load current values for merges
+    const currentDoc = await this.ensure(tenantId);
+    const current = currentDoc.toObject();
 
-    await this.settingsModel
-      .updateOne(
-        { tenantId: tid },
-        {
-          $set: {
-            currency: dto.currency,
-            invoice: dto.invoice,
-            loyalty: dto.loyalty,
-            stock: dto.stock,
-            integration: dto.integration,
-          },
-        },
-        { upsert: true },
-      )
-      .exec();
+    // Build $set with only provided sections
+    const set: Partial<Settings> = {};
+    if (dto.currency) set.currency = dto.currency as SettingsCurrency;
+    if (dto.invoice) set.invoice = dto.invoice as SettingsInvoice;
+    if (dto.loyalty) set.loyalty = dto.loyalty as SettingsLoyalty;
+    if (dto.stock) set.stock = dto.stock as SettingsStock;
+    if (dto.integration) {
+      set.integration = {
+        ...(current.integration ?? {}),
+        ...dto.integration,
+      } as SettingsIntegration;
+    }
+
+    if (Object.keys(set).length > 0) {
+      // Ensure we pass a plain object to Mongoose (avoid class instances)
+      const plainSet: Partial<Settings> = JSON.parse(
+        JSON.stringify(set),
+      ) as Partial<Settings>;
+      const update: UpdateQuery<Settings> = { $set: plainSet };
+      await this.settingsModel
+        .updateOne({ tenantId: tid }, update, { upsert: true })
+        .exec();
+    }
     return this.ensure(tenantId);
   }
 }
